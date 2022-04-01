@@ -22,8 +22,9 @@ class ItemCollectionViewCell: UICollectionViewCell {
 
 	var photoOfProduct: UIImageView = {
 		var image = UIImageView()
-		image.contentMode = .scaleAspectFit
 		image.translatesAutoresizingMaskIntoConstraints = false
+		image.clipsToBounds = true
+		image.contentMode = .scaleAspectFit
 		return image
 	}()
 
@@ -39,18 +40,12 @@ class ItemCollectionViewCell: UICollectionViewCell {
 
 	override func layoutSubviews() {
 	  super.layoutSubviews()
-//		NSLayoutConstraint.activate([
-//			placeLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 100),
-//			placeLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-//			placeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//			placeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
-//		])
-
 		NSLayoutConstraint.activate([
-			photoOfProduct.topAnchor.constraint(equalTo: contentView.topAnchor),
-			photoOfProduct.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-			photoOfProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-			photoOfProduct.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+			photoOfProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+			photoOfProduct.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+			photoOfProduct.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+			photoOfProduct.widthAnchor.constraint(equalToConstant: 300),
+			photoOfProduct.heightAnchor.constraint(equalToConstant: 300)
 		])
 
 	}

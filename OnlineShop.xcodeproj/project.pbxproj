@@ -20,6 +20,8 @@
 		BF7AFDE727F4A7E200956BCA /* ItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */; };
 		BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */; };
 		BF7AFDEB27F4EBE700956BCA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDEA27F4EBE700956BCA /* APIService.swift */; };
+		BFCEB5A327F73EB300A4A6B2 /* CartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */; };
+		BFCEB5A527F740D300A4A6B2 /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCEB5A427F740D300A4A6B2 /* CartCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViewCell.swift; sourceTree = "<group>"; usesTabs = 1; };
 		BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModel.swift; sourceTree = "<group>"; };
 		BF7AFDEA27F4EBE700956BCA /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartModel.swift; sourceTree = "<group>"; };
+		BFCEB5A427F740D300A4A6B2 /* CartCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
 		CD31E8F212298307BD32BA6B /* Pods_OnlineShop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OnlineShop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -96,8 +100,10 @@
 				BF7AFDCC27F494BB00956BCA /* SceneDelegate.swift */,
 				BF7AFDCE27F494BB00956BCA /* TabBarController.swift */,
 				BF7AFDDE27F49CE100956BCA /* ShopCartViewController.swift */,
+				BFCEB5A427F740D300A4A6B2 /* CartCell.swift */,
 				BF7AFDE027F49F3400956BCA /* CategoriesViewController.swift */,
 				BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */,
+				BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */,
 				BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */,
 				BF7AFDE227F49F4800956BCA /* SingleItemViewController.swift */,
 				BF7AFDEA27F4EBE700956BCA /* APIService.swift */,
@@ -223,10 +229,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFCEB5A527F740D300A4A6B2 /* CartCell.swift in Sources */,
 				BF7AFDE527F49F9400956BCA /* TrendingViewController.swift in Sources */,
 				BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */,
 				BF7AFDCF27F494BB00956BCA /* TabBarController.swift in Sources */,
 				BF7AFDCB27F494BB00956BCA /* AppDelegate.swift in Sources */,
+				BFCEB5A327F73EB300A4A6B2 /* CartModel.swift in Sources */,
 				BF7AFDDF27F49CE100956BCA /* ShopCartViewController.swift in Sources */,
 				BF7AFDE327F49F4800956BCA /* SingleItemViewController.swift in Sources */,
 				BF7AFDEB27F4EBE700956BCA /* APIService.swift in Sources */,

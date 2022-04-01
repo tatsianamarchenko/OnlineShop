@@ -9,10 +9,9 @@ import UIKit
 import Alamofire
 
 class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLayout {
-	var contentArray = [Product]()
+	static var contentArray = [Product]()
 
-	var animator = UIViewPropertyAnimator(duration: 1, curve: .easeInOut) {
-	}
+	var animator = UIViewPropertyAnimator(duration: 1, curve: .easeInOut)
 
 	var womenSortButton: UIButton = {
 		var button = UIButton()
@@ -42,6 +41,7 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 	private lazy var mainCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .horizontal
+	//	layout.estimatedItemSize = .zero
 		var collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
 		collection.register(ItemCollectionViewCell.self, forCellWithReuseIdentifier: ItemCollectionViewCell.identifier)
 		collection.translatesAutoresizingMaskIntoConstraints = false
@@ -49,23 +49,51 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 		collection.clipsToBounds = true
 		return collection
 	}()
-
+	var openProductCardGesture = UITapGestureRecognizer()
+	var closeProductCardGesture = UITapGestureRecognizer()
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(mainCollection)
 		view.addSubview(categotisStackView)
+		openProductCardGesture = UITapGestureRecognizer(target: self, action: #selector(openProduct))
+		closeProductCardGesture = UITapGestureRecognizer(target: self, action: #selector(closeProduct))
+		closeProductCardGesture.numberOfTapsRequired = 2
+		mainCollection.addGestureRecognizer(openProductCardGesture)
+		mainCollection.addGestureRecognizer(closeProductCardGesture)
+		mainCollection.delegate = self
+		mainCollection.dataSource = self
+		loadInfo()
+		makeConstraints()
+	}
 
+	@objc func openProduct() {
+		self.animator.startAnimation()
+		self.animator.addCompletion {_ in
+			print("complieted")
+		}
+	}
+
+	@objc func closeProduct() {
+		animator.addAnimations {
+			self.mainCollection.transform = .identity
+		}
+		self.animator.addCompletion {_ in
+			print("lol")
+		}
+		self.animator.startAnimation()
+	}
+
+	func loadInfo() {
 		AF.request("https://fakestoreapi.com/products")
 		  .validate()
 		  .responseDecodable(of: [Product].self) { (response) in
 			  guard let products = response.value else { return }
-			  self.contentArray = products
+			  CategoriesViewController.contentArray = products
 			  self.mainCollection.reloadData()
-			  self.animator.startAnimation()
 		  }
-		
-		mainCollection.delegate = self
-		mainCollection.dataSource = self
+	}
+
+	func makeConstraints() {
 		NSLayoutConstraint.activate([
 			mainCollection.topAnchor.constraint(equalTo: categotisStackView.topAnchor, constant: 100),
 			mainCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -85,7 +113,7 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-	  return contentArray.count
+	  return CategoriesViewController.contentArray.count
   }
 
   func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -94,44 +122,42 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
 
   func collectionView(_ collectionView: UICollectionView,
 					  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-	guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
+	  guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
 															ItemCollectionViewCell.identifier, for: indexPath)
-			as? ItemCollectionViewCell else {
-			  return UICollectionViewCell()
-			}
+				as? ItemCollectionViewCell else {
+					return UICollectionViewCell()
+				}
 	  cell.placeLabel.text = "shbd"
-	  cell.photoOfProduct.downloadedFrom(url: contentArray[indexPath.row].image)
-	  cell.photoOfProduct.contentMode = .scaleAspectFit
+	  cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
 	  cell.clipsToBounds = true
 	  animator.addAnimations {
-		  cell.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+		  cell.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+		  cell.photoOfProduct.layer.cornerRadius = 30
 	  }
-	return cell
+	  return cell
   }
-
-
 
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  sizeForItemAt indexPath: IndexPath) -> CGSize {
-	return CGSize(width: 350, height: 380)
+	return CGSize(width: 300, height: 300)
   }
 
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-	return 1
+	return 10
   }
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-	return 10
+	return 100
   }
 
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  insetForSectionAt section: Int) -> UIEdgeInsets {
-	return UIEdgeInsets(top: 110, left: 10, bottom: 30, right: 10)
+	return UIEdgeInsets(top: 110, left: 50, bottom: 30, right: 50)
   }
 }
 
