@@ -16,10 +16,22 @@ class ShopCartViewController: UIViewController {
 	  table.translatesAutoresizingMaskIntoConstraints = false
 	  return table
 	}()
-	
+
+	let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipedLeft))
+
+	@objc func swipedLeft()
+	{
+		// Add your record changing code here
+	}
+
     override func viewDidLoad() {
         super.viewDidLoad()
 		loadInfo()
+		swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
+
+		self.productsTableView.addGestureRecognizer(swipeLeft)
+
+
 		view.addSubview(productsTableView)
 		productsTableView.dataSource = self
 		productsTableView.delegate = self
@@ -62,6 +74,32 @@ extension ShopCartViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 	return 130
   }
+
+	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+		.delete
+	}
+
+	func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+		let filterAction = UIContextualAction(style: .normal, title: "") { (action, view, bool) in
+			print("Swiped to filter")
+			self.sourceArray.remove(at: indexPath.row)
+			tableView.deleteRows(at: [indexPath], with: .right)
+
+		}
+		filterAction.backgroundColor = .systemGreen
+		filterAction.image = UIImage(systemName: "heart")
+		filterAction.accessibilityNavigationStyle = .automatic
+		return UISwipeActionsConfiguration(actions: [filterAction])
+	}
+
+
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+	  if editingStyle == .delete {
+		sourceArray.remove(at: indexPath.row)
+		  tableView.deleteRows(at: [indexPath], with: .left)
+	  }
+	}
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 	tableView.deselectRow(at: indexPath, animated: true)

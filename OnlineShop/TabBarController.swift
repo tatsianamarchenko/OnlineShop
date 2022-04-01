@@ -9,20 +9,20 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
 
-  private lazy var animation: CAKeyframeAnimation = {
-	let animation = CAKeyframeAnimation(keyPath: "transform.scale")
-	animation.values = [1.0, 1.1, 0.9, 1.02, 1.0]
-	animation.duration = TimeInterval(0.3)
-	animation.calculationMode = CAAnimationCalculationMode.cubic
-	return animation
-  }()
-
-  override func viewDidLoad() {
-	super.viewDidLoad()
-	view.backgroundColor = .systemBackground
-	  tabBar.tintColor = .systemMint
-	setupVCs()
-  }
+	private lazy var animation: CAKeyframeAnimation = {
+		let animation = CAKeyframeAnimation(keyPath: "transform.scale")
+		animation.values = [1.0, 1.1, 0.9, 1.02, 1.0]
+		animation.duration = TimeInterval(0.3)
+		animation.calculationMode = CAAnimationCalculationMode.cubic
+		return animation
+	}()
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		view.backgroundColor = .systemBackground
+		tabBar.tintColor = .systemMint
+		setupVCs()
+	}
 
 	private func setupVCs() {
 		let categotyImage = UIImage(systemName: "house")
@@ -50,6 +50,15 @@ class MainTabBarController: UITabBarController {
 			return
 		}
 
+		let heartImage = UIImage(systemName: "heart")
+		guard let heartImage = heartImage else {
+			return
+		}
+		let heartFillImage = UIImage(systemName: "heart.fill")
+		guard let heartFillImage = heartFillImage else {
+			return
+		}
+
 		viewControllers = [
 			createNavController(for: CategoriesViewController(),
 								   title: NSLocalizedString("Categories", comment: ""),
@@ -59,6 +68,10 @@ class MainTabBarController: UITabBarController {
 								   title: NSLocalizedString("Trends", comment: ""),
 								   image: trendingImage,
 								   selectedImage: trendingFillImage),
+			createNavController(for: FavoriteViewController(),
+								   title: NSLocalizedString("favorite", comment: ""),
+								   image: heartImage,
+								   selectedImage: heartFillImage),
 			createNavController(for: ShopCartViewController(),
 								   title: NSLocalizedString("Cart", comment: ""),
 								   image: cartImage,
@@ -66,24 +79,24 @@ class MainTabBarController: UITabBarController {
 		]
 	}
 
-  private func createNavController(for rootViewController: UIViewController,
-								   title: String,
-								   image: UIImage, selectedImage: UIImage) -> UIViewController {
-	let navController = UINavigationController(rootViewController: rootViewController)
-	navController.tabBarItem.title = title
-	navController.tabBarItem.selectedImage = selectedImage
-	navController.tabBarItem.image = image
-	navController.navigationBar.prefersLargeTitles = true
-	  rootViewController.navigationItem.title = title
-	return navController
-  }
+	private func createNavController(for rootViewController: UIViewController,
+									 title: String,
+									 image: UIImage, selectedImage: UIImage) -> UIViewController {
+		let navController = UINavigationController(rootViewController: rootViewController)
+		navController.tabBarItem.title = title
+		navController.tabBarItem.selectedImage = selectedImage
+		navController.tabBarItem.image = image
+		navController.navigationBar.prefersLargeTitles = true
+		rootViewController.navigationItem.title = title
+		return navController
+	}
 }
 
 extension MainTabBarController: UITabBarControllerDelegate {
-  override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-	guard let imageView = item.value(forKey: "view") as? UIView else {
-	  return
+	override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+		guard let imageView = item.value(forKey: "view") as? UIView else {
+			return
+		}
+		imageView.layer.add(animation, forKey: nil)
 	}
-	imageView.layer.add(animation, forKey: nil)
-  }
 }
