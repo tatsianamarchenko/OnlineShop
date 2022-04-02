@@ -1,15 +1,14 @@
 //
-//  ShopCartViewController.swift
+//  FavoriteViewController.swift
 //  OnlineShop
 //
-//  Created by Tatsiana Marchanka on 30.03.22.
+//  Created by Tatsiana Marchanka on 1.04.22.
 //
 
 import UIKit
-import Alamofire
 
-class ShopCartViewController: UIViewController {
-	var sourceArray = [ProductInCart]()
+class FavoriteViewController: UIViewController {
+static var sourceArray = [ProductInCart]()
 	private lazy var productsTableView: UITableView = {
 	  let table = UITableView()
 	  table.register(CartCell.self, forCellReuseIdentifier: CartCell.cellIdentifier)
@@ -17,21 +16,8 @@ class ShopCartViewController: UIViewController {
 	  return table
 	}()
 
-	let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipedLeft))
-
-	@objc func swipedLeft()
-	{
-		// Add your record changing code here
-	}
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-		loadInfo()
-		swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
-
-		self.productsTableView.addGestureRecognizer(swipeLeft)
-
-
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		view.addSubview(productsTableView)
 		productsTableView.dataSource = self
 		productsTableView.delegate = self
@@ -41,31 +27,24 @@ class ShopCartViewController: UIViewController {
 			productsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			productsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
 		])
-		
-    }
-
-	func loadInfo() {
-		AF.request("https://fakestoreapi.com/carts")
-		  .validate()
-		  .responseDecodable(of: [CartModel].self) { (response) in
-			  guard let productsInCart = response.value else { return }
-			  self.sourceArray = productsInCart[0].products
-			  self.productsTableView.reloadData()
-		  }
+	}
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		productsTableView.reloadData()
 	}
 }
 
-extension ShopCartViewController: UITableViewDelegate, UITableViewDataSource {
+extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-	  return sourceArray.count
+	  return FavoriteViewController.sourceArray.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 	if let cell = productsTableView.dequeueReusableCell(withIdentifier: CartCell.cellIdentifier, for: indexPath)
 		as? CartCell {
-		if !sourceArray.isEmpty {
-			cell.config(model: sourceArray[indexPath.row])}
+		if !FavoriteViewController.sourceArray.isEmpty {
+			cell.config(model: FavoriteViewController.sourceArray[indexPath.row])}
 	  return cell
 	}
 	return UITableViewCell()
@@ -79,24 +58,9 @@ extension ShopCartViewController: UITableViewDelegate, UITableViewDataSource {
 		.delete
 	}
 
-	func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-
-		let filterAction = UIContextualAction(style: .normal, title: "") { (action, view, bool) in
-			print("Swiped to filter")
-			self.sourceArray.remove(at: indexPath.row)
-			tableView.deleteRows(at: [indexPath], with: .right)
-
-		}
-		filterAction.backgroundColor = .systemGreen
-		filterAction.image = UIImage(systemName: "heart")
-		filterAction.accessibilityNavigationStyle = .automatic
-		return UISwipeActionsConfiguration(actions: [filterAction])
-	}
-
-
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 	  if editingStyle == .delete {
-		sourceArray.remove(at: indexPath.row)
+		  FavoriteViewController.sourceArray.remove(at: indexPath.row)
 		  tableView.deleteRows(at: [indexPath], with: .left)
 	  }
 	}

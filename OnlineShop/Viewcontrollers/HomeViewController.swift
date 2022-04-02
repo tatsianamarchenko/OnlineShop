@@ -13,6 +13,20 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 
 	var animator = UIViewPropertyAnimator(duration: 1, curve: .easeInOut)
 
+	var search: UISearchBar = {
+		var search = UISearchBar()
+		search.placeholder = "Find your plant"
+		search.translatesAutoresizingMaskIntoConstraints = false
+		return search
+	}()
+
+	var scrollView : UIScrollView = {
+		var scrollView = UIScrollView()
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		scrollView.backgroundColor = .systemGreen
+		return scrollView
+	}()
+
 	var womenSortButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("womenSortButton", for: .normal)
@@ -41,7 +55,6 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 	private lazy var mainCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .horizontal
-	//	layout.estimatedItemSize = .zero
 		var collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
 		collection.register(ItemCollectionViewCell.self, forCellWithReuseIdentifier: ItemCollectionViewCell.identifier)
 		collection.translatesAutoresizingMaskIntoConstraints = false
@@ -53,8 +66,10 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 	var closeProductCardGesture = UITapGestureRecognizer()
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.addSubview(mainCollection)
-		view.addSubview(categotisStackView)
+		view.addSubview(search)
+		view.addSubview(scrollView)
+		scrollView.addSubview(mainCollection)
+		scrollView.addSubview(categotisStackView)
 		openProductCardGesture = UITapGestureRecognizer(target: self, action: #selector(openProduct))
 		closeProductCardGesture = UITapGestureRecognizer(target: self, action: #selector(closeProduct))
 		closeProductCardGesture.numberOfTapsRequired = 2
@@ -95,17 +110,31 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 
 	func makeConstraints() {
 		NSLayoutConstraint.activate([
-			mainCollection.topAnchor.constraint(equalTo: categotisStackView.topAnchor, constant: 100),
-			mainCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-			mainCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			mainCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			search.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			search.trailingAnchor.constraint(equalTo: view.trailingAnchor)
 		])
 
 		NSLayoutConstraint.activate([
-			categotisStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-			categotisStackView.heightAnchor.constraint(equalToConstant: 200),
-			categotisStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			categotisStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+			scrollView.topAnchor.constraint(equalTo: search.bottomAnchor),
+			scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+			scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+		])
+
+
+		NSLayoutConstraint.activate([
+			mainCollection.topAnchor.constraint(equalTo: categotisStackView.topAnchor, constant: 100),
+			mainCollection.bottomAnchor.constraint(equalTo: scrollView.safeAreaLayoutGuide.bottomAnchor, constant: -150),
+			mainCollection.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+			mainCollection.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+		])
+
+		NSLayoutConstraint.activate([
+			categotisStackView.topAnchor.constraint(equalTo: search.bottomAnchor),
+			categotisStackView.heightAnchor.constraint(equalToConstant: 100),
+			categotisStackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+			categotisStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
 		])
 	}
 }
@@ -120,6 +149,8 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
 	return 1
   }
 
+
+
   func collectionView(_ collectionView: UICollectionView,
 					  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 	  guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
@@ -128,6 +159,7 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
 					return UICollectionViewCell()
 				}
 	  cell.placeLabel.text = "shbd"
+	  cell.photoOfProduct.layer.cornerRadius = 10
 	  cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
 	  cell.clipsToBounds = true
 	  animator.addAnimations {
@@ -140,24 +172,24 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  sizeForItemAt indexPath: IndexPath) -> CGSize {
-	return CGSize(width: 300, height: 300)
+	return CGSize(width: 200, height: 300)
   }
 
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-	return 10
+	return 1
   }
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-	return 100
+	return 20
   }
 
   func collectionView(_ collectionView: UICollectionView,
 					  layout collectionViewLayout: UICollectionViewLayout,
 					  insetForSectionAt section: Int) -> UIEdgeInsets {
-	return UIEdgeInsets(top: 110, left: 50, bottom: 30, right: 50)
+	return UIEdgeInsets(top: 110, left: 10, bottom: 130, right: 10)
   }
 }
 

@@ -13,6 +13,7 @@ class ItemCollectionViewCell: UICollectionViewCell {
 	var placeLabel: UILabel = {
 	  var lable = UILabel()
 	  lable.textColor = .label
+		lable.backgroundColor = .systemBackground
 	  lable.lineBreakMode = .byWordWrapping
 		lable.translatesAutoresizingMaskIntoConstraints = false
 	  lable.lineBreakStrategy = .pushOut
@@ -23,8 +24,7 @@ class ItemCollectionViewCell: UICollectionViewCell {
 	var photoOfProduct: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
-		image.clipsToBounds = true
-		image.contentMode = .scaleAspectFit
+		image.contentMode = .scaleToFill
 		return image
 	}()
 
@@ -34,18 +34,25 @@ class ItemCollectionViewCell: UICollectionViewCell {
 
 	  contentView.clipsToBounds = true
 	  contentView.layer.cornerRadius = 10
-	  addSubview(placeLabel)
+		photoOfProduct.addSubview(placeLabel)
 		addSubview(photoOfProduct)
 	}
 
 	override func layoutSubviews() {
 	  super.layoutSubviews()
+		photoOfProduct.layer.cornerRadius = 10
+		placeLabel.layer.cornerRadius = 3
+		photoOfProduct.clipsToBounds = true
+		placeLabel.clipsToBounds = true
 		NSLayoutConstraint.activate([
-			photoOfProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-			photoOfProduct.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-			photoOfProduct.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-			photoOfProduct.widthAnchor.constraint(equalToConstant: 300),
-			photoOfProduct.heightAnchor.constraint(equalToConstant: 300)
+			photoOfProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+			photoOfProduct.topAnchor.constraint(equalTo: contentView.topAnchor),
+			photoOfProduct.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+			photoOfProduct.widthAnchor.constraint(equalToConstant: 200),
+			photoOfProduct.heightAnchor.constraint(equalToConstant: 300),
+			placeLabel.bottomAnchor.constraint(equalTo: photoOfProduct.bottomAnchor, constant:  -10),
+			placeLabel.leadingAnchor.constraint(equalTo: photoOfProduct.leadingAnchor, constant: 30),
+			placeLabel.widthAnchor.constraint(equalToConstant: 100/2),
 		])
 
 	}
