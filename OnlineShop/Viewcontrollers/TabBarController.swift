@@ -12,7 +12,7 @@ class MainTabBarController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .systemBackground
-		tabBar.tintColor = .systemGreen
+		tabBar.tintColor = Constants().greenColor
 		setupVCs()
 	}
 

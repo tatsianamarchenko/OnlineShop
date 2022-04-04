@@ -7,6 +7,7 @@
 
 import UIKit
 import GMStepper
+import ReadMoreTextView
 
 class SingleItemViewController: UIViewController {
 	var fav = false
@@ -27,7 +28,7 @@ class SingleItemViewController: UIViewController {
 	var addToCartButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("add to cart", for: .normal)
-		button.backgroundColor = .systemGreen
+		button.backgroundColor = Constants().greenColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button
@@ -37,24 +38,22 @@ class SingleItemViewController: UIViewController {
 		var stepper = GMStepper()
 		stepper.maximumValue = 100
 		stepper.minimumValue = 1
-		stepper.backgroundColor = .systemGray6
-		stepper.borderColor = .systemGreen
-		stepper.buttonsTextColor = .systemGray
+		stepper.buttonsTextColor = Constants().greyColor
 
-		stepper.buttonsBackgroundColor = .systemGray5
-		stepper.limitHitAnimationColor = .systemGray6
+		stepper.buttonsBackgroundColor = Constants().whiteColor
+		stepper.limitHitAnimationColor = Constants().greyColor
 		stepper.labelBackgroundColor = .systemBackground
-		stepper.labelTextColor = .systemGray
+		stepper.labelTextColor = Constants().greyColor
 
-		stepper.tintColor = .systemGray6
+		stepper.tintColor = Constants().greyColor
 		stepper.translatesAutoresizingMaskIntoConstraints = false
 		stepper.stepValue = 1
 		return stepper
 	}()
 
 	func createBacicInformationImage (string: String) -> UIImageView {
-		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(.systemGray, renderingMode: .alwaysOriginal))
-			image.backgroundColor = .systemGray6
+		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(Constants().greyColor, renderingMode: .alwaysOriginal))
+		image.backgroundColor = Constants().whiteColor
 			image.layer.cornerRadius = 3
 			image.translatesAutoresizingMaskIntoConstraints = false
 			image.clipsToBounds = true
@@ -66,7 +65,7 @@ class SingleItemViewController: UIViewController {
 		let lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.text = string
-		lable.textColor = .systemGray
+		lable.textColor = Constants().greyColor
 		lable.contentMode = .center
 		return lable
 	}
@@ -76,17 +75,17 @@ class SingleItemViewController: UIViewController {
 		title.translatesAutoresizingMaskIntoConstraints = false
 		title.text = "$60"
 		title.font = UIFont.systemFont(ofSize: 30)
-		title.textColor = .systemGreen
+		title.textColor = Constants().greenColor
 		return title
 	}()
 
 	func createIteminfoStack(title: String, info: String) -> UIStackView {
 		let titleLable = UILabel()
 		titleLable.text = title
-		titleLable.textColor = .systemGray2
+		titleLable.textColor = Constants().greyColor
 		let infoLable = UILabel()
 		infoLable.text = info
-		infoLable.textColor = .systemGray
+		infoLable.textColor = Constants().darkGreyColor
 		let stack = UIStackView(arrangedSubviews: [titleLable, infoLable])
 		stack.translatesAutoresizingMaskIntoConstraints = false
 		stack.axis = .vertical
@@ -97,13 +96,18 @@ class SingleItemViewController: UIViewController {
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
+		lable.textColor = Constants().darkGreyColor
 		lable.text = "Description"
 		return lable
 	}()
 
-	private lazy var descriptionTextView : UITextView = {
-		var textView = UITextView()
-		textView.backgroundColor = .systemGreen
+	private lazy var descriptionTextView : ReadMoreTextView = {
+		var textView = ReadMoreTextView()
+		textView.shouldTrim = true
+		textView.maximumNumberOfLines = 3
+		textView.readMoreText = " Read more"
+		textView.readLessText = " Read less"
+		textView.textColor = Constants().greyColor
 		textView.translatesAutoresizingMaskIntoConstraints = false
 		textView.font = .systemFont(ofSize: 15)
 		textView.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
@@ -185,13 +189,13 @@ class SingleItemViewController: UIViewController {
 			descriptionTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
 			descriptionTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
 			descriptionTextView.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor),
-			descriptionTextView.heightAnchor.constraint(equalToConstant: 50),
+			descriptionTextView.heightAnchor.constraint(equalToConstant: 70),
 
 			similarLable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
 			similarLable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
 			similarLable.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 10),
 
-			similarCollection.topAnchor.constraint(equalTo: similarLable.bottomAnchor, constant: 5),
+			similarCollection.topAnchor.constraint(equalTo: similarLable.bottomAnchor),
 			similarCollection.bottomAnchor.constraint(equalTo: addToCartButton.topAnchor, constant: -10),
 			similarCollection.widthAnchor.constraint(equalTo: view.widthAnchor),
 
@@ -233,7 +237,7 @@ class SingleItemViewController: UIViewController {
 	func createBar() {
 		title = "lavanda"
 		tabBarController?.tabBar.isHidden = true
-		let saveImage = UIImage(systemName: "heart")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal)
+		let saveImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		guard let saveImage = saveImage else {
 			return
 		}
@@ -247,11 +251,11 @@ class SingleItemViewController: UIViewController {
 
 	@objc func addToFavorte(_ sender: UIBarButtonItem) {
 		fav.toggle()
-		let unfavImage = UIImage(systemName: "heart")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal)
+		let unfavImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		guard let unfavImage = unfavImage else {
 			return
 		}
-		let favImage = UIImage(systemName: "heart.fill")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal)
+		let favImage = UIImage(systemName: "heart.fill")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		guard let favImage = favImage else {
 			return
 		}
@@ -303,6 +307,8 @@ extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDa
 	  cell.photoOfProduct.layer.cornerRadius = 10
 	  cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
 	  cell.clipsToBounds = true
+	  cell.layer.shadowRadius = 10
+	  cell.layer.shadowColor = .init(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
 	  return cell
   }
 

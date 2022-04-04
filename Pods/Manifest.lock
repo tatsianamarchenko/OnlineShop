@@ -1,20 +1,24 @@
 PODS:
   - Alamofire (5.5.0)
   - GMStepper (2.2)
+  - ReadMoreTextView (3.0.1)
 
 DEPENDENCIES:
   - Alamofire
   - GMStepper
+  - ReadMoreTextView
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - GMStepper
+    - ReadMoreTextView
 
 SPEC CHECKSUMS:
   Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
   GMStepper: 89fb106944dfcc3aa3add7164e3ebd463ea2104b
+  ReadMoreTextView: 19147adf93abce6d7271e14031a00303fe28720d
 
-PODFILE CHECKSUM: 70ea4ba67fb8091004d76451b0253db39cb57a48
+PODFILE CHECKSUM: fc2e6cb75fd6c6e9cbc59bfdce950cfb4ec32c47
 
 COCOAPODS: 1.11.2
