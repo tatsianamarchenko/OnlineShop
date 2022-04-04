@@ -7,5 +7,6 @@ target 'OnlineShop' do
 
   # Pods for OnlineShop
 pod 'Alamofire'
+pod 'GMStepper'
 
 end

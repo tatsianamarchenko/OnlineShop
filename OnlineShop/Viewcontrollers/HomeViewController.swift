@@ -62,8 +62,10 @@ class CategoriesViewController: UIViewController, UICollectionViewDelegateFlowLa
 		collection.clipsToBounds = true
 		return collection
 	}()
+
 	var openProductCardGesture = UITapGestureRecognizer()
 	var closeProductCardGesture = UITapGestureRecognizer()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(search)

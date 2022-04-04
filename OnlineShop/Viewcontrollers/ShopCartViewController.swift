@@ -31,6 +31,10 @@ class ShopCartViewController: UIViewController {
 		])
 		
     }
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		tabBarController?.tabBar.isHidden = false
+	}
 
 	func loadInfo() {
 		AF.request("https://fakestoreapi.com/carts")
