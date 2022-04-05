@@ -1,16 +1,16 @@
 //
-//  ItemCollectionViewCell.swift
+//  FavoriteCollectionViewCell.swift
 //  OnlineShop
 //
-//  Created by Tatsiana Marchanka on 30.03.22.
+//  Created by Tatsiana Marchanka on 5.04.22.
 //
 
 import UIKit
 import GMStepper
 
-class CartCollectionViewCell: UICollectionViewCell {
-	
-	static let identifier = "CartCollectionViewCell"
+class FavoriteCollectionViewCell: UICollectionViewCell {
+
+	static let identifier = "FavoriteCollectionViewCell"
 
 	var nameLabel: UILabel = {
 		var lable = UILabel()
@@ -40,15 +40,15 @@ class CartCollectionViewCell: UICollectionViewCell {
 		lable.text = "For Bathroom"
 		return lable
 	}()
-
-	private lazy var priceLable : UILabel = {
-		var lable = UILabel()
-		lable.font = .systemFont(ofSize: 20, weight: .medium)
-		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.textColor = Constants().darkGreyColor
-		lable.textAlignment = .right
-		lable.text = "$100"
-		return lable
+	
+	var  addToCartButton: UIButton = {
+		var button = UIButton()
+		button.setTitle("$100", for: .normal)
+		button.titleLabel?.textAlignment = .center
+		button.backgroundColor = Constants().greenColor
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.layer.cornerRadius = 10
+		return button
 	}()
 
 	private lazy var descriptionLable : UILabel = {
@@ -94,8 +94,8 @@ class CartCollectionViewCell: UICollectionViewCell {
 		addSubview(descriptionLable)
 		addSubview(typeLable)
 		addSubview(stepper)
-		addSubview(priceLable)
 		addSubview(removeButton)
+		addSubview(addToCartButton)
 		makeConstants()
 	}
 
@@ -128,11 +128,11 @@ class CartCollectionViewCell: UICollectionViewCell {
 			stepper.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 5),
 			stepper.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
 
-			priceLable.leadingAnchor.constraint(equalTo: stepper.trailingAnchor, constant: 10),
-			priceLable.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-			priceLable.widthAnchor.constraint(equalToConstant: contentView.frame.width/3),
-			priceLable.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 5),
-			priceLable.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+			addToCartButton.leadingAnchor.constraint(equalTo: stepper.trailingAnchor, constant: 10),
+			addToCartButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+			addToCartButton.widthAnchor.constraint(equalToConstant: contentView.frame.width/3),
+			addToCartButton.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 5),
+			addToCartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
 
 			removeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
 			removeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
@@ -147,5 +147,5 @@ class CartCollectionViewCell: UICollectionViewCell {
 		super.prepareForReuse()
 		nameLabel.text = nil
 	}
-	
+
 }

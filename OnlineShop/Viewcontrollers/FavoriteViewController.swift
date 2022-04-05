@@ -6,76 +6,113 @@
 //
 
 import UIKit
+import Alamofire
 
 class FavoriteViewController: UIViewController {
-static var sourceArray = [ProductInCart]()
-	private lazy var productsTableView: UITableView = {
-	  let table = UITableView()
-	  table.register(CartCell.self, forCellReuseIdentifier: CartCell.cellIdentifier)
-	  table.translatesAutoresizingMaskIntoConstraints = false
-	  return table
-	}()
+		var sourceArray = [ProductInCart]()
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		view.addSubview(productsTableView)
-		productsTableView.dataSource = self
-		productsTableView.delegate = self
-		NSLayoutConstraint.activate([
-			productsTableView.topAnchor.constraint(equalTo: view.topAnchor),
-			productsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-			productsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			productsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-		])
-	}
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		productsTableView.reloadData()
-	}
-}
+		private lazy var itemsCollection : UICollectionView = {
+			let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
+			layout.scrollDirection = .vertical
+			var collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+			collection.register(FavoriteCollectionViewCell.self, forCellWithReuseIdentifier: FavoriteCollectionViewCell.identifier)
+			collection.translatesAutoresizingMaskIntoConstraints = false
+			collection.showsVerticalScrollIndicator = false
+			collection.backgroundColor = .systemBackground
+			collection.clipsToBounds = true
+			return collection
+		}()
 
-extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
+		override func viewDidLoad() {
+			super.viewDidLoad()
+			loadInfo()
+			view.addSubview(itemsCollection)
+			itemsCollection.dataSource = self
+			itemsCollection.delegate = self
+			makeConstraints()
+		}
 
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-	  return FavoriteViewController.sourceArray.count
-  }
+		func makeConstraints() {
+			NSLayoutConstraint.activate([
+				itemsCollection.topAnchor.constraint(equalTo: view.topAnchor),
+				itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+				itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+				itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			])
+		}
 
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-	if let cell = productsTableView.dequeueReusableCell(withIdentifier: CartCell.cellIdentifier, for: indexPath)
-		as? CartCell {
-		if !FavoriteViewController.sourceArray.isEmpty {
-			cell.config(model: FavoriteViewController.sourceArray[indexPath.row])}
-	  return cell
-	}
-	return UITableViewCell()
-  }
+		override func viewWillAppear(_ animated: Bool) {
+			super.viewWillAppear(animated)
+			tabBarController?.tabBar.isHidden = false
+		}
 
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-	return 130
-  }
-
-	func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-		.delete
+		func loadInfo() {
+			AF.request("https://fakestoreapi.com/carts")
+			  .validate()
+			  .responseDecodable(of: [CartModel].self) { (response) in
+				  guard let productsInCart = response.value else { return }
+				  self.sourceArray = productsInCart[0].products
+				  self.itemsCollection.reloadData()
+			  }
+		}
 	}
 
-	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-	  if editingStyle == .delete {
-		  FavoriteViewController.sourceArray.remove(at: indexPath.row)
-		  tableView.deleteRows(at: [indexPath], with: .left)
-	  }
-	}
 
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-	tableView.deselectRow(at: indexPath, animated: true)
-//	let model = ContactsModel.contactsSourceArray.contacts[indexPath.row]
-//	guard let image =  model.image.getImage() else {
-//	  return
-//	}
-//	let viewController = InfoAboutContactViewController(
-//	  imageItem: image,
-//	  titleItem: model.name,
-//	  item: model,
-//	  indexPath: indexPath)
-//	navigationController?.pushViewController(viewController, animated: true)
-  }
-}
+	extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+		func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+			return 10
+		}
+
+		func numberOfSections(in collectionView: UICollectionView) -> Int {
+			return 1
+		}
+
+		func collectionView(_ collectionView: UICollectionView,
+							cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+			guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
+																	FavoriteCollectionViewCell.identifier, for: indexPath)
+					as? FavoriteCollectionViewCell else {
+						return UICollectionViewCell()
+					}
+			cell.nameLabel.text = "Lavander"
+			cell.photoOfProduct.layer.cornerRadius = 10
+			cell.photoOfProduct.image = UIImage(named: "lol")
+			cell.layer.cornerRadius = 20
+			cell.layer.borderWidth = 0
+			cell.layer.shadowColor = UIColor.systemGray.cgColor
+			cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+			cell.layer.shadowRadius = 8
+			cell.layer.shadowOpacity = 0.5
+			cell.layer.masksToBounds = false
+			return cell
+		}
+
+		func collectionView(_ collectionView: UICollectionView,
+							layout collectionViewLayout: UICollectionViewLayout,
+							sizeForItemAt indexPath: IndexPath) -> CGSize {
+			return CGSize(width: view.frame.width-20, height: view.frame.height/5-20)
+		}
+
+		func collectionView(_ collectionView: UICollectionView,
+							layout collectionViewLayout: UICollectionViewLayout,
+							minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+			return 1
+		}
+		func collectionView(_ collectionView: UICollectionView,
+							layout collectionViewLayout: UICollectionViewLayout,
+							minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+			return 30
+		}
+
+		func collectionView(_ collectionView: UICollectionView,
+							layout collectionViewLayout: UICollectionViewLayout,
+							insetForSectionAt section: Int) -> UIEdgeInsets {
+			return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+		}
+
+		func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+			let vc = SingleItemViewController()
+			navigationController?.pushViewController(vc, animated: true)
+		}
+	}

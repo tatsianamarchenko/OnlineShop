@@ -16,7 +16,7 @@ class Cell: UITableViewCell {
 //    title.textColor = .label
 //    return title
 //  }()
-	
+
 	private lazy var mainCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .horizontal
@@ -47,7 +47,7 @@ class Cell: UITableViewCell {
 		mainCollection.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 	  ])
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
   }
@@ -59,7 +59,7 @@ class Cell: UITableViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
 }
 
 extension Cell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

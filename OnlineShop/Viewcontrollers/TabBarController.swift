@@ -47,7 +47,7 @@ class MainTabBarController: UITabBarController {
 			createNavController(for: CategoriesViewController(),
 								   title: NSLocalizedString("Home", comment: ""),
 								   image: homeFillImage),
-			createNavController(for: TrendingViewController(),
+			createNavController(for: CatalogViewController(),
 								   title: NSLocalizedString("Discount", comment: ""),
 								   image: discountFillImage),
 			createNavController(for: ShopCartViewController(),
@@ -56,7 +56,7 @@ class MainTabBarController: UITabBarController {
 			createNavController(for: FavoriteViewController(),
 								   title: NSLocalizedString("Saved", comment: ""),
 								   image: heartFillImage),
-			createNavController(for: FavoriteViewController(),
+			createNavController(for: ProfileViewController(),
 								   title: NSLocalizedString("Profile", comment: ""),
 								   image: personFillImage),
 		]
