@@ -9,5 +9,8 @@ target 'OnlineShop' do
 pod 'Alamofire'
 pod 'GMStepper'
 pod 'ReadMoreTextView'
+pod 'Firebase/Auth'
+pod 'Firebase/Firestore'
+pod 'Firebase/Storage'
 
 end

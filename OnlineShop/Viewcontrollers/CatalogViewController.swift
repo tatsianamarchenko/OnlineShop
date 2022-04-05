@@ -7,10 +7,55 @@
 
 import UIKit
 import Alamofire
+import Firebase
+import FirebaseFirestore
+import FirebaseStorage
 
 class CatalogViewController: UIViewController {
-	var sourceArray = [ProductInCart]()
 
+var a = [UIImage]()
+	let db = Firestore.firestore()
+	func addPost() {
+
+		db.collection("Flowers").getDocuments { snapshot, error in
+			if error == nil && snapshot != nil {
+				var paths = [String]()
+				for documents in snapshot!.documents {
+					paths.append(documents["image"] as! String)
+				}
+
+				for path in paths {
+					let storage = Storage.storage().reference()
+					let fileRef = storage.child(path)
+					fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+						if error == nil {
+							self.a.append(UIImage(data: data!)!)
+						}
+
+					}
+				}
+				self.itemsCollection.reloadData()
+			}
+		}
+	}
+
+	func createCategoryButtons (title: String) -> UIButton {
+		let button = UIButton()
+			button.setTitle(title, for: .normal)
+			button.titleLabel?.textAlignment = .center
+			button.setTitleColor(Constants().greenColor, for: .normal)
+			button.translatesAutoresizingMaskIntoConstraints = false
+			return button
+	}
+
+	var search: UISearchBar = {
+		var search = UISearchBar()
+		search.placeholder = "Find your plant"
+		search.translatesAutoresizingMaskIntoConstraints = false
+		return search
+	}()
+
+	var sourceArray = [ProductInCart]()
 	private lazy var itemsCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .vertical
@@ -25,16 +70,24 @@ class CatalogViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		loadInfo()
+		addPost()
 		view.addSubview(itemsCollection)
+		view.addSubview(search)
 		itemsCollection.dataSource = self
 		itemsCollection.delegate = self
-		makeConstraints()
-	}
-
-	func makeConstraints() {
+		let allButton = createCategoryButtons(title: "All")
+		view.addSubview(allButton)
 		NSLayoutConstraint.activate([
-			itemsCollection.topAnchor.constraint(equalTo: view.topAnchor),
+			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			search.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			search.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+			allButton.topAnchor.constraint(equalTo: search.bottomAnchor),
+			allButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			allButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+
+			itemsCollection.topAnchor.constraint(equalTo: allButton.bottomAnchor),
 			itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 			itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -45,23 +98,13 @@ class CatalogViewController: UIViewController {
 		super.viewWillAppear(animated)
 		tabBarController?.tabBar.isHidden = false
 	}
-
-	func loadInfo() {
-		AF.request("https://fakestoreapi.com/carts")
-		  .validate()
-		  .responseDecodable(of: [CartModel].self) { (response) in
-			  guard let productsInCart = response.value else { return }
-			  self.sourceArray = productsInCart[0].products
-			  self.itemsCollection.reloadData()
-		  }
-	}
 }
 
 
 extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 10
+		return 15
 	}
 
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -77,7 +120,8 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 				}
 		cell.nameLabel.text = "Lavander"
 		cell.photoOfProduct.layer.cornerRadius = 10
-		cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
+		if !a.isEmpty {
+			cell.photoOfProduct.image = a[indexPath.row]}
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor
@@ -116,3 +160,5 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 		navigationController?.pushViewController(vc, animated: true)
 	}
 }
+
+
