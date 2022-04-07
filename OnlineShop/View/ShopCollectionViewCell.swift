@@ -84,6 +84,13 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 return image
 	 }()
 
+	func config(madel: Flower) {
+		nameLabel.text = madel.title
+		descriptionLable.text = madel.description
+		typeLable.text = madel.type
+		priceLable.text = ("$\(madel.price)")
+	}
+
 	 override init(frame: CGRect) {
 		 super.init(frame: frame)
 		 contentView.backgroundColor = .systemBackground

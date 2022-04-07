@@ -13,39 +13,46 @@ import FirebaseStorage
 
 class CatalogViewController: UIViewController {
 
-var a = [UIImage]()
 	let db = Firestore.firestore()
-	func addPost() {
+	var flowers = [Flower]()
 
-		db.collection("Flowers").getDocuments { snapshot, error in
-			if error == nil && snapshot != nil {
-				var paths = [String]()
-				for documents in snapshot!.documents {
-					paths.append(documents["image"] as! String)
-				}
+	func fetchData() {
+		db.collection("Flowers").getDocuments { (querySnapshot, error) in
+			guard let documents = querySnapshot?.documents else {
+				print("No documents")
+				return
+			}
+			documents.map { queryDocumentSnapshot in
+				let	data = queryDocumentSnapshot.data()
+				var image: Image?
+				let type = data["type"] as? String ?? ""
+				let description = data["description"] as? String ?? ""
+				let title = data["title"] as? String ?? ""
+				let price = data["price"] as? String ?? ""
+				let path = data["image"] as? String ?? ""
+				let id = queryDocumentSnapshot.documentID
 
-				for path in paths {
-					let storage = Storage.storage().reference()
-					let fileRef = storage.child(path)
-					fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-						if error == nil {
-							self.a.append(UIImage(data: data!)!)
-						}
-
+				let storage = Storage.storage().reference()
+				let fileRef = storage.child(path)
+				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+					if error == nil {
+						image = Image(withImage: data!)
+						let f = Flower(description: description, image: image, price: price, title: title, type: type, id: id)
+						self.flowers.append(f)
+						self.itemsCollection.reloadData()
 					}
 				}
-				self.itemsCollection.reloadData()
 			}
 		}
 	}
 
 	func createCategoryButtons (title: String) -> UIButton {
 		let button = UIButton()
-			button.setTitle(title, for: .normal)
-			button.titleLabel?.textAlignment = .center
-			button.setTitleColor(Constants().greenColor, for: .normal)
-			button.translatesAutoresizingMaskIntoConstraints = false
-			return button
+		button.setTitle(title, for: .normal)
+		button.titleLabel?.textAlignment = .center
+		button.setTitleColor(Constants().greenColor, for: .normal)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		return button
 	}
 
 	var search: UISearchBar = {
@@ -70,7 +77,7 @@ var a = [UIImage]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		addPost()
+		fetchData()
 		view.addSubview(itemsCollection)
 		view.addSubview(search)
 		itemsCollection.dataSource = self
@@ -104,7 +111,7 @@ var a = [UIImage]()
 extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 15
+		return flowers.count
 	}
 
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -118,10 +125,11 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 				as? ShopCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-		cell.nameLabel.text = "Lavander"
-		cell.photoOfProduct.layer.cornerRadius = 10
-		if !a.isEmpty {
-			cell.photoOfProduct.image = a[indexPath.row]}
+		if !flowers.isEmpty {
+			cell.photoOfProduct.layer.cornerRadius = 10
+			cell.photoOfProduct.image = flowers[indexPath.row].image?.getImage()
+			cell.config(madel: flowers[indexPath.row])
+		}
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor
@@ -161,4 +169,25 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 	}
 }
 
+struct Flower: Codable {
+	var description: String
+	var image: Image?
+	var price: String
+	var title: String
+	var type: String
+	var id: String
+}
 
+struct Image: Codable {
+  let imageData: Data?
+  init(withImage image: Data) {
+	self.imageData = image
+  }
+  func getImage() -> UIImage? {
+	guard let imageData = self.imageData else {
+	  return nil
+	}
+	let image = UIImage(data: imageData)
+	return image
+  }
+}
