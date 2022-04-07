@@ -52,7 +52,7 @@ class ItemCollectionViewCell: UICollectionViewCell {
 			photoOfProduct.heightAnchor.constraint(equalToConstant: 300),
 			placeLabel.bottomAnchor.constraint(equalTo: photoOfProduct.bottomAnchor, constant:  -10),
 			placeLabel.leadingAnchor.constraint(equalTo: photoOfProduct.leadingAnchor, constant: 30),
-			placeLabel.widthAnchor.constraint(equalToConstant: 100/2),
+			placeLabel.widthAnchor.constraint(equalToConstant: 80),
 		])
 
 	}
