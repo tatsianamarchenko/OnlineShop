@@ -6,15 +6,11 @@
 //
 
 import UIKit
-import Alamofire
-import Firebase
-import FirebaseFirestore
-import FirebaseStorage
 
 class CategoriesViewController: UIViewController {
-	static var contentArray = [Product]()
-	let db = Firestore.firestore()
+	static var flowers = [Flower]()
 	var categories = [Category]()
+	var firebaseManager = FirebaseManager()
 	
 	var scrollView : UIScrollView = {
 		var scrollView = UIScrollView()
@@ -84,10 +80,12 @@ class CategoriesViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		fetchData(document: "Category")
-		fetchImage(collection: "Sale", imageView: saleImage)
-		fetchImage(collection: "Accessories", imageView: accessoryImage)
-
+		firebaseManager.fetchData(document: "Category") { category in
+			self.categories.append(category)
+			self.mainCollection.reloadData()
+		}
+		firebaseManager.fetchImage(collection: "Sale", imageView: saleImage)
+		firebaseManager.fetchImage(collection: "Accessories", imageView: accessoryImage)
 		view.addSubview(scrollView)
 		view.addSubview(search)
 
@@ -102,56 +100,7 @@ class CategoriesViewController: UIViewController {
 		mainCollection.dataSource = self
 		makeConstraints()
 	}
-
-	func fetchData(document: String) {
-		db.collection(document).getDocuments { (querySnapshot, error) in
-			guard let documents = querySnapshot?.documents else {
-				print("No documents")
-				return
-			}
-			documents.map { queryDocumentSnapshot in
-				let	data = queryDocumentSnapshot.data()
-				var image: Image?
-				let name = data["name"] as? String ?? ""
-				let path = data["image"] as? String ?? ""
-
-				let storage = Storage.storage().reference()
-				let fileRef = storage.child(path)
-				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-					if error == nil {
-						image = Image(withImage: data!)
-						let f = Category(image: image, name: name)
-						self.categories.append(f)
-						self.mainCollection.reloadData()
-					}
-				}
-			}
-		}
-	}
-
-	func fetchImage(collection: String, imageView: UIImageView) {
-		db.collection(collection).getDocuments { (querySnapshot, error) in
-			guard let documents = querySnapshot?.documents else {
-				print("No documents")
-				return
-			}
-			documents.map { queryDocumentSnapshot in
-				let	data = queryDocumentSnapshot.data()
-				let path = data["image"] as? String ?? ""
-				print(path)
-				let storage = Storage.storage().reference()
-				let fileRef = storage.child(path)
-				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-					if error == nil {
-						imageView.image = UIImage(data: data!)!
-					}
-				}
-			}
-		}
-	}
-
-
-
+	
 	func makeConstraints() {
 		NSLayoutConstraint.activate([
 			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -258,7 +207,7 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		
+
 	}
 
 	func collectionView(_ collectionView: UICollectionView,

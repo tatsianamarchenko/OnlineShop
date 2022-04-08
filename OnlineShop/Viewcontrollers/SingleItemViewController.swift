@@ -287,7 +287,7 @@ extension UIView {
 extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-	  return CategoriesViewController.contentArray.count
+	1
   }
 
   func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -305,7 +305,7 @@ extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDa
 				}
 	  cell.placeLabel.text = "shbd"
 	  cell.photoOfProduct.layer.cornerRadius = 10
-	  cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
+	//  cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
 	  cell.clipsToBounds = true
 	  cell.layer.shadowRadius = 10
 	  cell.layer.shadowColor = .init(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)

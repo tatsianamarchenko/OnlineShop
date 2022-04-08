@@ -6,46 +6,14 @@
 //
 
 import UIKit
-import Alamofire
 import Firebase
 import FirebaseFirestore
 import FirebaseStorage
 
 class CatalogViewController: UIViewController {
 
-	let db = Firestore.firestore()
 	var flowers = [Flower]()
-
-	func fetchData() {
-		db.collection("Flowers").getDocuments { (querySnapshot, error) in
-			guard let documents = querySnapshot?.documents else {
-				print("No documents")
-				return
-			}
-			documents.map { queryDocumentSnapshot in
-				let	data = queryDocumentSnapshot.data()
-				var image: Image?
-				let type = data["type"] as? String ?? ""
-				let description = data["description"] as? String ?? ""
-				let title = data["title"] as? String ?? ""
-				let price = data["price"] as? String ?? ""
-				let path = data["image"] as? String ?? ""
-				let id = queryDocumentSnapshot.documentID
-
-				let storage = Storage.storage().reference()
-				let fileRef = storage.child(path)
-				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-					if error == nil {
-						image = Image(withImage: data!)
-						let f = Flower(description: description, image: image, price: price, title: title, type: type, id: id)
-						self.flowers.append(f)
-						self.itemsCollection.reloadData()
-					}
-				}
-			}
-		}
-	}
-
+	var firebaseManager = FirebaseManager()
 	func createCategoryButtons (title: String) -> UIButton {
 		let button = UIButton()
 		button.setTitle(title, for: .normal)
@@ -54,6 +22,14 @@ class CatalogViewController: UIViewController {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}
+
+	var scView: UIScrollView = {
+		var scView = UIScrollView(frame:.zero)
+		scView.translatesAutoresizingMaskIntoConstraints = false
+		scView.showsVerticalScrollIndicator = false
+		scView.showsHorizontalScrollIndicator = false
+		return scView
+	}()
 
 	var search: UISearchBar = {
 		var search = UISearchBar()
@@ -75,35 +51,105 @@ class CatalogViewController: UIViewController {
 		return collection
 	}()
 
+	func loadInfo() {
+		self.flowers.removeAll()
+		firebaseManager.fetchMain(document: "Flowers") { flower in
+			self.flowers.append(flower)
+			self.scView.reloadInputViews()
+			self.itemsCollection.reloadData()
+		}
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		fetchData()
+		loadInfo()
 		view.addSubview(itemsCollection)
 		view.addSubview(search)
+		view.addSubview(scView)
 		itemsCollection.dataSource = self
 		itemsCollection.delegate = self
-		let allButton = createCategoryButtons(title: "All")
-		view.addSubview(allButton)
-		NSLayoutConstraint.activate([
-			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-			search.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			search.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+		let buttonPadding:CGFloat = 10
+		var xOffset:CGFloat = 10
+		let buttonNameArray = ["All", "Living room", "Bathroom", "Bedroom", "Kitchen"]
 
-			allButton.topAnchor.constraint(equalTo: search.bottomAnchor),
-			allButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			allButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-
-
-			itemsCollection.topAnchor.constraint(equalTo: allButton.bottomAnchor),
-			itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-			itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-		])
+		for (index, value) in buttonNameArray.enumerated() {
+			let button = UIButton()
+			button.accessibilityIdentifier = value
+			button.setTitle(value, for: .normal)
+			button.titleLabel?.font = .systemFont(ofSize: 20)
+			button.addTarget(self, action: #selector(btnTouch), for: .touchUpInside)
+			button.titleLabel?.textAlignment = .center
+			button.setTitleColor(Constants().greenColor, for: .normal)
+			button.setTitleColor(Constants().darkGreyColor, for: .selected)
+			button.frame = CGRect(x: xOffset, y: CGFloat(buttonPadding), width: 110, height: 30)
+			xOffset = xOffset + CGFloat(buttonPadding) + button.frame.size.width
+			scView.addSubview(button)
+			scView.contentSize = CGSize(width: xOffset, height: scView.frame.height)
+		}
+		makeConstants()
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		tabBarController?.tabBar.isHidden = false
+	}
+	@objc func btnTouch(_ button: UIButton) {
+		self.flowers.removeAll()
+		firebaseManager.fetchMain(document: "Flowers") { flower in
+			switch button.accessibilityIdentifier {
+			case "All":
+				self.flowers.append(flower)
+				self.itemsCollection.reloadData()
+			case "Living room":
+				if flower.type == "Living room" {
+				self.flowers.append(flower)
+				}
+				self.itemsCollection.reloadData()
+			case "Bathroom":
+				if flower.type == "Bathroom" {
+				self.flowers.append(flower)
+				}
+				self.itemsCollection.reloadData()
+			case "Bedroom":
+				if flower.type == "Bedroom" {
+				self.flowers.append(flower)
+				}
+				self.itemsCollection.reloadData()
+			case "Kitchen":
+				if flower.type == "Kitchen" {
+					self.flowers.append(flower)
+					self.itemsCollection.reloadData()
+				}
+			default: 	break
+			}
+		}
+	}
+//	func createArray(new: String) -> [String] {
+//		if !buttonNameArray.contains(new) {
+//			buttonNameArray.append(new)
+//		}
+//		print(buttonNameArray)
+//		return buttonNameArray
+//	}
+
+	func makeConstants() {
+
+		NSLayoutConstraint.activate([
+			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+			search.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			search.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+			scView.topAnchor.constraint(equalTo: search.bottomAnchor),
+			scView.bottomAnchor.constraint(equalTo: itemsCollection.topAnchor),
+			scView.heightAnchor.constraint(equalToConstant: 50),
+			scView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			scView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+			itemsCollection.topAnchor.constraint(equalTo: scView.bottomAnchor),
+			itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+			itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+		])
 	}
 }
 

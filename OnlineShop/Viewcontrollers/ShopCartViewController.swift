@@ -122,7 +122,7 @@ extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewData
 				}
 		cell.nameLabel.text = "Lavander"
 		cell.photoOfProduct.layer.cornerRadius = 10
-		cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
+		cell.photoOfProduct.image = UIImage(named: "lol")
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor

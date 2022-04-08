@@ -20,6 +20,7 @@
 		BF7AFDE727F4A7E200956BCA /* ItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */; };
 		BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */; };
 		BF7AFDEB27F4EBE700956BCA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDEA27F4EBE700956BCA /* APIService.swift */; };
+		BFB717DB27FFA6B200851F7D /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB717DA27FFA6B200851F7D /* FirebaseManager.swift */; };
 		BFC30E7127FC863700A53419 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFC30E7027FC863700A53419 /* GoogleService-Info.plist */; };
 		BFCEB5A327F73EB300A4A6B2 /* CartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */; };
 		BFCEB5A727F76D7C00A4A6B2 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCEB5A627F76D7C00A4A6B2 /* FavoriteViewController.swift */; };
@@ -49,6 +50,7 @@
 		BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViewCell.swift; sourceTree = "<group>"; usesTabs = 1; };
 		BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModel.swift; sourceTree = "<group>"; };
 		BF7AFDEA27F4EBE700956BCA /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		BFB717DA27FFA6B200851F7D /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		BFC30E7027FC863700A53419 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartModel.swift; sourceTree = "<group>"; };
 		BFCEB5A627F76D7C00A4A6B2 /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				BF7AFDEA27F4EBE700956BCA /* APIService.swift */,
+				BFB717DA27FFA6B200851F7D /* FirebaseManager.swift */,
 				BFF3184627FB32F7008E292B /* Constants.swift */,
 				BF7AFDCC27F494BB00956BCA /* SceneDelegate.swift */,
 				BF7AFDCA27F494BB00956BCA /* AppDelegate.swift */,
@@ -298,6 +301,7 @@
 				BFF3184B27FB5DEB008E292B /* CartCollectionViewCell.swift in Sources */,
 				BF7AFDE327F49F4800956BCA /* SingleItemViewController.swift in Sources */,
 				BF7AFDEB27F4EBE700956BCA /* APIService.swift in Sources */,
+				BFB717DB27FFA6B200851F7D /* FirebaseManager.swift in Sources */,
 				BFCEB5A727F76D7C00A4A6B2 /* FavoriteViewController.swift in Sources */,
 				BFF3185127FB99E4008E292B /* DeliveryOrderView.swift in Sources */,
 				BF7AFDE727F4A7E200956BCA /* ItemCollectionViewCell.swift in Sources */,
