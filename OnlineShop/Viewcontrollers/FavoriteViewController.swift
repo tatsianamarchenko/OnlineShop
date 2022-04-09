@@ -112,7 +112,7 @@ class FavoriteViewController: UIViewController {
 		}
 
 		func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-			let vc = SingleItemViewController()
+			let vc = SingleItemViewController(flower: nil, flowerArray: nil)
 			navigationController?.pushViewController(vc, animated: true)
 		}
 	}

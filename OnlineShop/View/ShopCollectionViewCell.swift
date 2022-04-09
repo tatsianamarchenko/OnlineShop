@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import GMStepper
 
 class ShopCollectionViewCell: UICollectionViewCell {
 
@@ -59,23 +58,6 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 lable.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
 		 return lable
 	 }()
-	 private lazy var stepper: GMStepper = {
-		 var stepper = GMStepper()
-		 stepper.maximumValue = 100
-		 stepper.minimumValue = 1
-		 stepper.buttonsTextColor = Constants().greyColor
-
-		 stepper.buttonsBackgroundColor = Constants().whiteColor
-		 stepper.limitHitAnimationColor = Constants().greyColor
-		 stepper.labelBackgroundColor = .systemBackground
-		 stepper.labelTextColor = Constants().greyColor
-		 stepper.labelFont = .systemFont(ofSize: 15, weight: .medium)
-		 stepper.tintColor = Constants().greyColor
-		 stepper.translatesAutoresizingMaskIntoConstraints = false
-		 stepper.stepValue = 1
-		 return stepper
-	 }()
-
 
 	 var photoOfProduct: UIImageView = {
 		 var image = UIImageView()
@@ -100,7 +82,6 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 addSubview(photoOfProduct)
 		 addSubview(descriptionLable)
 		 addSubview(typeLable)
-		 addSubview(stepper)
 		 addSubview(priceLable)
 		 addSubview(removeButton)
 		 makeConstants()
@@ -128,14 +109,8 @@ class ShopCollectionViewCell: UICollectionViewCell {
 			 descriptionLable.topAnchor.constraint(equalTo: typeLable.bottomAnchor, constant: 5),
 			 descriptionLable.leadingAnchor.constraint(equalTo: photoOfProduct.trailingAnchor, constant: 10),
 			 descriptionLable.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-			 descriptionLable.widthAnchor.constraint(equalToConstant: contentView.frame.width/2),
+			 descriptionLable.widthAnchor.constraint(equalToConstant: contentView.frame.width/1.7),
 
-			 stepper.leadingAnchor.constraint(equalTo: photoOfProduct.trailingAnchor, constant: 10),
-			 stepper.widthAnchor.constraint(equalToConstant: contentView.frame.width/4),
-			 stepper.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 5),
-			 stepper.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-
-			 priceLable.leadingAnchor.constraint(equalTo: stepper.trailingAnchor, constant: 10),
 			 priceLable.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
 			 priceLable.widthAnchor.constraint(equalToConstant: contentView.frame.width/3),
 			 priceLable.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 5),

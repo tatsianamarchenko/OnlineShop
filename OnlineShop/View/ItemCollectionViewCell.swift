@@ -8,17 +8,17 @@
 import UIKit
 
 class ItemCollectionViewCell: UICollectionViewCell {
-  static let identifier = "ItemCollectionViewCell"
+	static let identifier = "ItemCollectionViewCell"
 
 	var placeLabel: UILabel = {
-	  var lable = UILabel()
-	  lable.textColor = .label
+		var lable = UILabel()
+		lable.textColor = .label
 		lable.backgroundColor = .systemBackground
-	  lable.lineBreakMode = .byWordWrapping
+		lable.lineBreakMode = .byWordWrapping
 		lable.translatesAutoresizingMaskIntoConstraints = false
-	  lable.lineBreakStrategy = .pushOut
-	  lable.numberOfLines = 0
-	  return lable
+		lable.lineBreakStrategy = .pushOut
+		lable.numberOfLines = 0
+		return lable
 	}()
 
 	var photoOfProduct: UIImageView = {
@@ -29,17 +29,17 @@ class ItemCollectionViewCell: UICollectionViewCell {
 	}()
 
 	override init(frame: CGRect) {
-	  super.init(frame: frame)
+		super.init(frame: frame)
 		contentView.backgroundColor = .magenta
 
-	  contentView.clipsToBounds = true
-	  contentView.layer.cornerRadius = 10
+		contentView.clipsToBounds = true
+		contentView.layer.cornerRadius = 10
 		photoOfProduct.addSubview(placeLabel)
 		addSubview(photoOfProduct)
 	}
 
 	override func layoutSubviews() {
-	  super.layoutSubviews()
+		super.layoutSubviews()
 		photoOfProduct.layer.cornerRadius = 10
 		placeLabel.layer.cornerRadius = 3
 		photoOfProduct.clipsToBounds = true
@@ -58,12 +58,12 @@ class ItemCollectionViewCell: UICollectionViewCell {
 	}
 
 	required init?(coder: NSCoder) {
-	  fatalError("init(coder:) has not been implemented")
+		fatalError("init(coder:) has not been implemented")
 	}
 
 	override func prepareForReuse() {
-	  super.prepareForReuse()
-	  placeLabel.text = nil
+		super.prepareForReuse()
+		placeLabel.text = nil
 	}
 	
 }

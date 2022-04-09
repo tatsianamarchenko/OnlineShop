@@ -11,14 +11,27 @@ import ReadMoreTextView
 
 class SingleItemViewController: UIViewController {
 	var fav = false
+	var flower: Flower?
+	var flowerArray: [Flower]?
+
 	private lazy var productImageView: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.backgroundColor = .systemGray3
-		image.image = UIImage(named: "lavanda")
+		image.image = flower?.image?.getImage()
 		image.contentMode = .scaleToFill
 		return image
 	}()
+
+	init(flower: Flower?, flowerArray: [Flower]?) {
+		self.flower = flower
+		self.flowerArray = flowerArray
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	private lazy var flowerView: UIView = {
 		var view = UIView()
@@ -54,11 +67,11 @@ class SingleItemViewController: UIViewController {
 	func createBacicInformationImage (string: String) -> UIImageView {
 		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(Constants().greyColor, renderingMode: .alwaysOriginal))
 		image.backgroundColor = Constants().whiteColor
-			image.layer.cornerRadius = 3
-			image.translatesAutoresizingMaskIntoConstraints = false
-			image.clipsToBounds = true
-			image.contentMode = .center
-			return image
+		image.layer.cornerRadius = 3
+		image.translatesAutoresizingMaskIntoConstraints = false
+		image.clipsToBounds = true
+		image.contentMode = .center
+		return image
 	}
 
 	func createBacicInformationLable(string: String) -> UILabel {
@@ -73,7 +86,7 @@ class SingleItemViewController: UIViewController {
 	private lazy  var priceLabel: UILabel = {
 		var title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
-		title.text = "$60"
+		title.text = "$" + flower!.price
 		title.font = UIFont.systemFont(ofSize: 30)
 		title.textColor = Constants().greenColor
 		return title
@@ -110,7 +123,7 @@ class SingleItemViewController: UIViewController {
 		textView.textColor = Constants().greyColor
 		textView.translatesAutoresizingMaskIntoConstraints = false
 		textView.font = .systemFont(ofSize: 15)
-		textView.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
+		textView.text =  flower?.description
 		return textView
 	}()
 
@@ -125,9 +138,8 @@ class SingleItemViewController: UIViewController {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .horizontal
 		var collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-		collection.register(ItemCollectionViewCell.self, forCellWithReuseIdentifier: ItemCollectionViewCell.identifier)
+		collection.register(ShopCollectionViewCell.self, forCellWithReuseIdentifier: ShopCollectionViewCell.identifier)
 		collection.translatesAutoresizingMaskIntoConstraints = false
-		collection.backgroundColor = .systemPink
 		collection.clipsToBounds = true
 		return collection
 	}()
@@ -139,9 +151,9 @@ class SingleItemViewController: UIViewController {
 		let sunImage = createBacicInformationImage(string: "sun.min")
 		let temperatureImage = createBacicInformationImage(string: "thermometer")
 
-		let hudrationLable =	createBacicInformationLable(string: "3-3.5L")
-		let sunLable = createBacicInformationLable(string: "18-20H")
-		let temperatureLable = createBacicInformationLable(string: "7-21 C")
+		let hudrationLable =	createBacicInformationLable(string: flower?.water ?? "?")
+		let sunLable = createBacicInformationLable(string: flower?.sun ?? "?" + "H")
+		let temperatureLable = createBacicInformationLable(string: flower?.temperature ?? "?" + "°C")
 
 		let typeStack = createIteminfoStack(title: "Type", info: "Indoor")
 		let sizeStack = createIteminfoStack(title: "Size", info: "Medium")
@@ -152,7 +164,6 @@ class SingleItemViewController: UIViewController {
 		mainStack.axis = .horizontal
 		mainStack.distribution = .equalSpacing
 		mainStack.alignment = .center
-
 		view.addSubview(mainStack)
 		view.addSubview(hudrationImage)
 		view.addSubview(sunImage)
@@ -172,6 +183,7 @@ class SingleItemViewController: UIViewController {
 		similarCollection.dataSource = self
 
 		NSLayoutConstraint.activate([
+			
 			productImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			productImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 			productImageView.widthAnchor.constraint(equalToConstant: view.frame.width/2),
@@ -235,7 +247,7 @@ class SingleItemViewController: UIViewController {
 	}
 
 	func createBar() {
-		title = "lavanda"
+		title = flower?.title
 		tabBarController?.tabBar.isHidden = true
 		let saveImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		guard let saveImage = saveImage else {
@@ -286,52 +298,54 @@ extension UIView {
 
 extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-	1
-  }
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		flowerArray!.count
+	}
 
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
-	return 1
-  }
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
+		return 1
+	}
 
-
-
-  func collectionView(_ collectionView: UICollectionView,
-					  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-	  guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
-															ItemCollectionViewCell.identifier, for: indexPath)
-				as? ItemCollectionViewCell else {
+	func collectionView(_ collectionView: UICollectionView,
+						cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier:
+																ShopCollectionViewCell.identifier, for: indexPath)
+				as? ShopCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-	  cell.placeLabel.text = "shbd"
-	  cell.photoOfProduct.layer.cornerRadius = 10
-	//  cell.photoOfProduct.downloadedFrom(url: CategoriesViewController.contentArray[indexPath.row].image)
-	  cell.clipsToBounds = true
-	  cell.layer.shadowRadius = 10
-	  cell.layer.shadowColor = .init(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.5)
-	  return cell
-  }
+		cell.photoOfProduct.layer.cornerRadius = 10
+		cell.photoOfProduct.image = flowerArray?[indexPath.row].image?.getImage()
+		cell.config(madel: (flowerArray?[indexPath.row])!)
+		cell.layer.cornerRadius = 20
+		cell.layer.borderWidth = 0
+		cell.layer.shadowColor = UIColor.systemGray.cgColor
+		cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+		cell.layer.shadowRadius = 8
+		cell.layer.shadowOpacity = 0.5
+		cell.layer.masksToBounds = false
+		return cell
+	}
 
-  func collectionView(_ collectionView: UICollectionView,
-					  layout collectionViewLayout: UICollectionViewLayout,
-					  sizeForItemAt indexPath: IndexPath) -> CGSize {
-	return CGSize(width: 200, height: 100)
-  }
+	func collectionView(_ collectionView: UICollectionView,
+						layout collectionViewLayout: UICollectionViewLayout,
+						sizeForItemAt indexPath: IndexPath) -> CGSize {
+		return CGSize(width: view.frame.width/1.5, height: 100)
+	}
 
-  func collectionView(_ collectionView: UICollectionView,
-					  layout collectionViewLayout: UICollectionViewLayout,
-					  minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-	return 1
-  }
-  func collectionView(_ collectionView: UICollectionView,
-					  layout collectionViewLayout: UICollectionViewLayout,
-					  minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-	return 10
-  }
+	func collectionView(_ collectionView: UICollectionView,
+						layout collectionViewLayout: UICollectionViewLayout,
+						minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+		return 1
+	}
+	func collectionView(_ collectionView: UICollectionView,
+						layout collectionViewLayout: UICollectionViewLayout,
+						minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+		return 10
+	}
 
-  func collectionView(_ collectionView: UICollectionView,
-					  layout collectionViewLayout: UICollectionViewLayout,
-					  insetForSectionAt section: Int) -> UIEdgeInsets {
-	return UIEdgeInsets(top: 1, left: 10, bottom: 1, right: 10)
-  }
+	func collectionView(_ collectionView: UICollectionView,
+						layout collectionViewLayout: UICollectionViewLayout,
+						insetForSectionAt section: Int) -> UIEdgeInsets {
+		return UIEdgeInsets(top: 1, left: 10, bottom: 1, right: 10)
+	}
 }

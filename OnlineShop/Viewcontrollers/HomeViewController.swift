@@ -1,5 +1,5 @@
 //
-//  CategoriesViewController.swift
+//  HomeViewController.swift
 //  OnlineShop
 //
 //  Created by Tatsiana Marchanka on 30.03.22.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CategoriesViewController: UIViewController {
+class HomeViewController: UIViewController {
 	static var flowers = [Flower]()
 	var categories = [Category]()
 	var firebaseManager = FirebaseManager()
@@ -169,7 +169,7 @@ class CategoriesViewController: UIViewController {
 	}
 }
 
-extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return self.categories.count
@@ -207,7 +207,8 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+		let vc = CatalogViewController(sort: categories[indexPath.row].name)
+			self.navigationController?.pushViewController(vc, animated: true)
 	}
 
 	func collectionView(_ collectionView: UICollectionView,
@@ -227,21 +228,6 @@ extension CategoriesViewController: UICollectionViewDelegate, UICollectionViewDa
 		return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 	}
 }
-
-
-extension UIImageView {
-
-	func downloadedFrom(url: String) {
-		guard let url = URL(string: url) else { return }
-		URLSession.shared.dataTask(with: url, completionHandler: { (data, _, error) -> Void in
-			guard let data = data, error == nil, let image = UIImage(data: data) else { return }
-			DispatchQueue.main.async { () -> Void in
-				self.image = image
-			}
-		}).resume()
-	}
-}
-
 
 struct Category: Codable {
 	var image: Image?

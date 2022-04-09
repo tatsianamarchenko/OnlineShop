@@ -44,10 +44,10 @@ class MainTabBarController: UITabBarController {
 		}
 
 		viewControllers = [
-			createNavController(for: CategoriesViewController(),
+			createNavController(for: HomeViewController(),
 								   title: NSLocalizedString("Home", comment: ""),
 								   image: homeFillImage),
-			createNavController(for: CatalogViewController(),
+			createNavController(for: CatalogViewController(sort: nil),
 								   title: NSLocalizedString("Discount", comment: ""),
 								   image: discountFillImage),
 			createNavController(for: ShopCartViewController(),

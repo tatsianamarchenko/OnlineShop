@@ -74,6 +74,9 @@ class FirebaseManager {
 				let title = data["title"] as? String ?? ""
 				let price = data["price"] as? String ?? ""
 				let path = data["image"] as? String ?? ""
+				let sun = data["sun"] as? String ?? ""
+				let water = data["water"] as? String ?? ""
+				let temperature = data["temperature"] as? String ?? ""
 				let id = queryDocumentSnapshot.documentID
 
 				let storage = Storage.storage().reference()
@@ -81,7 +84,7 @@ class FirebaseManager {
 				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
 					if error == nil {
 						image = Image(withImage: data!)
-						let f = Flower(description: description, image: image, price: price, title: title, type: type, id: id)
+						let f = Flower(description: description, image: image, price: price, title: title, type: type, sun: sun, water: water, temperature: temperature, id: id)
 						complition(f)
 					}
 				}
