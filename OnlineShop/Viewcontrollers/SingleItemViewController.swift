@@ -8,6 +8,7 @@
 import UIKit
 import GMStepper
 import ReadMoreTextView
+import Firebase
 
 class SingleItemViewController: UIViewController {
 	var fav = false
@@ -38,14 +39,7 @@ class SingleItemViewController: UIViewController {
 		return view
 	}()
 
-	var addToCartButton: UIButton = {
-		var button = UIButton()
-		button.setTitle("add to cart", for: .normal)
-		button.backgroundColor = Constants().greenColor
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.layer.cornerRadius = 10
-		return button
-	}()
+	var addToCartButton = UIButton().createCustomButton(title: "add to cart")
 
 	private lazy var stepper: GMStepper = {
 		var stepper = GMStepper()
@@ -86,7 +80,7 @@ class SingleItemViewController: UIViewController {
 	private lazy  var priceLabel: UILabel = {
 		var title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
-		title.text = "$" + flower!.price
+		title.text = flower?.price
 		title.font = UIFont.systemFont(ofSize: 30)
 		title.textColor = Constants().greenColor
 		return title
@@ -244,6 +238,31 @@ class SingleItemViewController: UIViewController {
 			stepper.widthAnchor.constraint(equalToConstant: view.frame.width/3),
 			stepper.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 		])
+		addToCartButton.addTarget(self, action: #selector(toCart), for: .touchUpInside)
+	}
+
+	@objc func toCart() {
+		let db = Firestore.firestore()
+		guard let user = Auth.auth().currentUser?.email else {return}
+		var collection = db.collection("users").document(user)
+		collection.getDocument { documentSnapshot, error in
+			var cart = documentSnapshot?["cart"] as? [String]
+			cart?.append(self.flower!.id)
+			collection.updateData(["cart": cart]) { error in
+				if error != nil {
+					self.createAlert(string: error?.localizedDescription ?? "")
+				} else {
+					self.createAlert(string: "Added to cart")
+				}
+
+			}
+		}
+	}
+
+	func createAlert(string: String) {
+		let alert = UIAlertController(title: "Added", message: string, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+		present(alert, animated: true)
 	}
 
 	func createBar() {
@@ -299,7 +318,7 @@ extension UIView {
 extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		flowerArray!.count
+		flowerArray?.count ?? 0
 	}
 
 	func numberOfSections(in collectionView: UICollectionView) -> Int {

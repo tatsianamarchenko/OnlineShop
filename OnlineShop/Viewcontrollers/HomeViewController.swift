@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import NVActivityIndicatorView
+import FirebaseAuth
 
 class HomeViewController: UIViewController {
 	static var flowers = [Flower]()
@@ -17,6 +19,9 @@ class HomeViewController: UIViewController {
 		scrollView.translatesAutoresizingMaskIntoConstraints = false
 		return scrollView
 	}()
+
+	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
+																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
 
 	private lazy  var namelLabel: UILabel = {
 		var title = UILabel()
@@ -71,15 +76,16 @@ class HomeViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
+		activityIndicatorView.startAnimating()
 		firebaseManager.fetchData(document: "Category") { category in
 			self.categories.append(category)
 			self.mainCollection.reloadData()
+			self.activityIndicatorView.stopAnimating()
 		}
 		firebaseManager.fetchImage(collection: "Sale", imageView: saleImage)
 		firebaseManager.fetchImage(collection: "Accessories", imageView: accessoryImage)
 		view.addSubview(scrollView)
-		
+		view.addSubview(activityIndicatorView)
 		scrollView.addSubview(saleView)
 		saleView.addSubview(saleImage)
 		scrollView.addSubview(mainCollection)

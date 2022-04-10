@@ -92,6 +92,43 @@ class FirebaseManager {
 		}
 	}
 
+	func fetchCartItem(document: String, complition: @escaping (Flower)-> Void) {
+		guard let user = Auth.auth().currentUser?.email else {return}
+		let db = Firestore.firestore()
+		var collection = db.collection(document).document(user)
+
+		collection.getDocument { documentSnapshot, error in
+			var cart = documentSnapshot?["cart"] as? [String]
+			guard let cart = cart else {return}
+			for i in 0..<cart.count {
+				let collection = db.collection("Flowers").document(cart[i])
+				collection.getDocument { documentSnapshot, error in
+					var image: Image?
+					let type = documentSnapshot?["type"] as? String ?? ""
+					let description = documentSnapshot?["description"] as? String ?? ""
+					let title = documentSnapshot?["title"] as? String ?? ""
+					let price = documentSnapshot?["price"] as? String ?? ""
+					let path = documentSnapshot?["image"] as? String ?? ""
+					let sun = documentSnapshot?["sun"] as? String ?? ""
+					let water = documentSnapshot?["water"] as? String ?? ""
+					let temperature = documentSnapshot?["temperature"] as? String ?? ""
+					let id = documentSnapshot?.documentID ?? ""
+
+					let storage = Storage.storage().reference()
+					let fileRef = storage.child(path)
+					fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+						if error == nil {
+							image = Image(withImage: data!)
+							let f = Flower(description: description, image: image, price: price, title: title, type: type, sun: sun, water: water, temperature: temperature, id: id)
+							complition(f)
+						}
+					}
+				}
+			}
+		}
+	}
+
+
 	func fetch (document: String, completion: @escaping ([String : Any]) -> Void)  {
 		db.collection(document).getDocuments { (querySnapshot, error) in
 			guard let documents = querySnapshot?.documents else {

@@ -9,7 +9,6 @@ import UIKit
 import Alamofire
 
 class FavoriteViewController: UIViewController {
-		var sourceArray = [ProductInCart]()
 
 		private lazy var itemsCollection : UICollectionView = {
 			let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
@@ -25,7 +24,6 @@ class FavoriteViewController: UIViewController {
 
 		override func viewDidLoad() {
 			super.viewDidLoad()
-			loadInfo()
 			view.addSubview(itemsCollection)
 			itemsCollection.dataSource = self
 			itemsCollection.delegate = self
@@ -44,16 +42,6 @@ class FavoriteViewController: UIViewController {
 		override func viewWillAppear(_ animated: Bool) {
 			super.viewWillAppear(animated)
 			tabBarController?.tabBar.isHidden = false
-		}
-
-		func loadInfo() {
-			AF.request("https://fakestoreapi.com/carts")
-			  .validate()
-			  .responseDecodable(of: [CartModel].self) { (response) in
-				  guard let productsInCart = response.value else { return }
-				  self.sourceArray = productsInCart[0].products
-				  self.itemsCollection.reloadData()
-			  }
 		}
 	}
 

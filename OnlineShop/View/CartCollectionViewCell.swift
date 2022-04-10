@@ -12,7 +12,7 @@ class CartCollectionViewCell: UICollectionViewCell {
 	
 	static let identifier = "CartCollectionViewCell"
 
-	var nameLabel: UILabel = {
+	private lazy var nameLabel: UILabel = {
 		var lable = UILabel()
 		lable.textColor = Constants().darkGreyColor
 		lable.font = .systemFont(ofSize: 20, weight: .medium)
@@ -24,7 +24,7 @@ class CartCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 
-	var  removeButton: UIButton = {
+	private lazy var  removeButton: UIButton = {
 		var button = UIButton()
 		button.setImage(UIImage(systemName: "xmark.bin")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
 		button.titleLabel?.textAlignment = .center
@@ -32,12 +32,11 @@ class CartCollectionViewCell: UICollectionViewCell {
 		return button
 	}()
 
-	private lazy var typeLable : UILabel = {
+	 private lazy var typeLable : UILabel = {
 		var lable = UILabel()
 		lable.font = .systemFont(ofSize: 15, weight: .regular)
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.textColor = Constants().darkGreyColor
-		lable.text = "For Bathroom"
 		return lable
 	}()
 
@@ -47,16 +46,22 @@ class CartCollectionViewCell: UICollectionViewCell {
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.textColor = Constants().darkGreyColor
 		lable.textAlignment = .right
-		lable.text = "$100"
 		return lable
 	}()
+
+	func config(model: Flower?) {
+		nameLabel.text = model?.title
+		typeLable.text = model?.type
+		priceLable.text = model?.price
+		descriptionLable.text = model?.description
+		photoOfProduct.image = model?.image?.getImage()
+	}
 
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.numberOfLines = 2
 		lable.font = .systemFont(ofSize: 15)
-		lable.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
 		return lable
 	}()
 	private lazy var stepper: GMStepper = {
@@ -77,7 +82,7 @@ class CartCollectionViewCell: UICollectionViewCell {
 	}()
 
 
-	var photoOfProduct: UIImageView = {
+	private lazy var photoOfProduct: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill

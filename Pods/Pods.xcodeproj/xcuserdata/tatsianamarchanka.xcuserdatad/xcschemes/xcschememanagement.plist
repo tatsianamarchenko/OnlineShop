@@ -116,26 +116,33 @@
 			<key>orderHint</key>
 			<integer>15</integer>
 		</dict>
-		<key>Pods-OnlineShop.xcscheme</key>
+		<key>NVActivityIndicatorView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>22</integer>
 		</dict>
-		<key>PromisesObjC.xcscheme</key>
+		<key>Pods-OnlineShop.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>23</integer>
 		</dict>
-		<key>ReadMoreTextView.xcscheme</key>
+		<key>PromisesObjC.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>24</integer>
+		</dict>
+		<key>ReadMoreTextView.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>25</integer>
 		</dict>
 		<key>abseil.xcscheme</key>
 		<dict>

@@ -154,7 +154,7 @@ extension UITextField {
 	func createCustomTextField(title: String) -> UITextField {
 		let textField = UITextField()
 		textField.keyboardType = .default
-		textField.autocapitalizationType = .words
+		textField.autocapitalizationType = .none
 		textField.autocorrectionType = .no
 		textField.placeholder = NSLocalizedString(title, comment: "")
 		textField.translatesAutoresizingMaskIntoConstraints = false

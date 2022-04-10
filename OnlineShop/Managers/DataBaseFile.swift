@@ -22,16 +22,19 @@ final class DataBaseManager {
 			else {
 				// success
 				let db = Firestore.firestore()
-				db.collection("users").addDocument(data: ["fullName": user.fullName,
-														  "phone": user.phone,
-														  "adress": user.adress,
-														  "zip": user.zip,
-														  "email": user.email,
-														  "passward": user.passward]) { error in
+				db.collection("users").document(user.email).setData(["fullName": user.fullName,
+																	 "phone": user.phone,
+																	 "adress": user.adress,
+																	 "zip": user.zip,
+																	 "email": user.email,
+																	 "passward": user.passward,
+																	 "cart": []]) { error in
 					if error != nil {
 						completion(error!)
 					}
 				}
+
+				UserDefaults.standard.set(user.email, forKey: "user")
 			}
 		}
 	}
@@ -42,11 +45,20 @@ final class DataBaseManager {
 				completion(.failure(error!))
 			}
 			else {
+				UserDefaults.standard.set(email, forKey: "user")
 				completion(.success(authResult!))
 			}
 		}
 	}
 
+	public func signOut (completion: @escaping((Result<Void, Error>) -> Void)) {
+		do {
+			let a = try Auth.auth().signOut()
+			completion(.success(a))
+		} catch let error {
+			completion(.failure(error))
+		}
+	}
 
 	public func isPasswardValid(_ passward: String) -> Bool {
 		let passwardPredicate = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")

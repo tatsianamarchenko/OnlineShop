@@ -7,10 +7,10 @@
 
 import UIKit
 import Alamofire
+import Firebase
 
 class ShopCartViewController: UIViewController {
-	var sourceArray = [ProductInCart]()
-
+var flowers = [Flower]()
 	private lazy var itemsCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .vertical
@@ -23,15 +23,7 @@ class ShopCartViewController: UIViewController {
 		return collection
 	}()
 
-	var  payCartButton: UIButton = {
-		var button = UIButton()
-		button.setTitle("Buy", for: .normal)
-		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().greenColor
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.layer.cornerRadius = 10
-		return button
-	}()
+	var  payCartButton = UIButton().createCustomButton(title: "Buy")
 
 	private lazy  var totalLabel: UILabel = {
 		var title = UILabel()
@@ -51,10 +43,10 @@ class ShopCartViewController: UIViewController {
 		title.textColor = Constants().greenColor
 		return title
 	}()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-		loadInfo()
+	var totalPrice = Double(0)
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
 		view.addSubview(itemsCollection)
 		view.addSubview(payCartButton)
 		view.addSubview(totalLabel)
@@ -62,7 +54,7 @@ class ShopCartViewController: UIViewController {
 		itemsCollection.dataSource = self
 		itemsCollection.delegate = self
 		makeConstraints()
-    }
+	}
 
 	func makeConstraints() {
 		NSLayoutConstraint.activate([
@@ -89,16 +81,15 @@ class ShopCartViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		tabBarController?.tabBar.isHidden = false
-	}
-
-	func loadInfo() {
-		AF.request("https://fakestoreapi.com/carts")
-		  .validate()
-		  .responseDecodable(of: [CartModel].self) { (response) in
-			  guard let productsInCart = response.value else { return }
-			  self.sourceArray = productsInCart[0].products
-			  self.itemsCollection.reloadData()
-		  }
+		FirebaseManager().fetchCartItem(document: "users") { flower in
+			self.flowers.append(flower)
+			self.itemsCollection.reloadData()
+			for flower in self.flowers {
+				let a = Double(flower.price)
+				self.totalPrice += Double(round(a ?? 0))
+				self.priceLabel.text = String(self.totalPrice)
+			}
+		}
 	}
 }
 
@@ -106,7 +97,7 @@ class ShopCartViewController: UIViewController {
 extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 10
+		return self.flowers.count
 	}
 
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -120,9 +111,7 @@ extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewData
 				as? CartCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-		cell.nameLabel.text = "Lavander"
-		cell.photoOfProduct.layer.cornerRadius = 10
-		cell.photoOfProduct.image = UIImage(named: "lol")
+		cell.config(model: flowers[indexPath.row])
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor
@@ -157,7 +146,14 @@ extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewData
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let vc = SingleItemViewController(flower: nil, flowerArray: nil)
+
+		let flower = self.flowers[indexPath.row]
+		var new = CatalogViewController.flowers
+		new.removeAll {
+			$0.type != flower.type
+		}
+
+		let vc = SingleItemViewController(flower: self.flowers[indexPath.row], flowerArray: new)
 		navigationController?.pushViewController(vc, animated: true)
 	}
 }

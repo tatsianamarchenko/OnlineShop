@@ -6,19 +6,11 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ProfileViewController: UIViewController {
 
-	var  chatButton: UIButton = {
-		var button = UIButton()
-		button.setTitle("Chat", for: .normal)
-		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().greenColor
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.layer.cornerRadius = 10
-		return button
-	}()
-
+	var  chatButton = UIButton().createCustomButton(title: "chat") 
 	var  phoneButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Phone", for: .normal)
@@ -36,7 +28,6 @@ class ProfileViewController: UIViewController {
 	private lazy  var namelLabel: UILabel = {
 		var title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
-		title.text = "Name"
 		title.textAlignment = .center
 		title.font = UIFont.systemFont(ofSize: 20)
 		title.textColor = Constants().darkGreyColor
@@ -311,7 +302,7 @@ class ProfileViewController: UIViewController {
 		profileContactsView.addSubview(advertesingPhoneLabel)
 		profileContactsView.addSubview(phoneLabel)
 		profileContactsView.addSubview(mailLabel)
-
+		createBarButton()
 		NSLayoutConstraint.activate([
 			contactsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
 			contactsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
@@ -458,12 +449,49 @@ class ProfileViewController: UIViewController {
 			suppordAccessebilityLabel.topAnchor.constraint(equalTo: contactsView.topAnchor, constant: 10),
 
 		])
+		config()
+	}
 
+	func config() {
+		guard let user = Auth.auth().currentUser else {return}
+		namelLabel.text = user.email
 	}
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		photoOfProfile.layer.cornerRadius = 10
 		photoOfProfile.clipsToBounds = true
+	}
+
+	func createBarButton() {
+	  let saveImage = UIImage(systemName: "person.crop.circle.badge.minus")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+	  guard let saveImage = saveImage else {
+		return
+	  }
+	  let button = UIBarButtonItem(image: saveImage,
+								   style: .plain,
+								   target: self,
+								   action: #selector(reset))
+
+	  navigationItem.rightBarButtonItem = button
+	}
+
+	@objc func reset() {
+		DataBaseManager().signOut { (result: Result<Void, Error>) in
+			switch result {
+			case .success(let success):
+				let vc = InViewController()
+				vc.modalPresentationStyle = .fullScreen
+				self.present(vc, animated: true)
+			case .failure(let failure):
+				self.alertUserLoginError(string: failure.localizedDescription)
+			}
+		}
+	}
+
+	func alertUserLoginError(string message: String) {
+		let alert = UIAlertController(title: "error", message: message, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+		present(alert, animated: true)
 	}
 }

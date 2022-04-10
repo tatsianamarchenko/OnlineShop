@@ -41,15 +41,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 	
-	var  addToCartButton: UIButton = {
-		var button = UIButton()
-		button.setTitle("$100", for: .normal)
-		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().greenColor
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.layer.cornerRadius = 10
-		return button
-	}()
+	var  addToCartButton = UIButton().createCustomButton(title: "$100")
 
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()

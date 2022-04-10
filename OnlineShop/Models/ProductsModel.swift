@@ -6,25 +6,31 @@
 //
 
 import Foundation
+import UIKit
 
-struct Product: Codable {
-	let id: Int
-	let title: String
-	let price: Double
-	let description: String
-	let category: Categ
-	let image: String
-	let rating: Rating
+struct Flower: Codable {
+	var description: String
+	var image: Image?
+	var price: String
+	var title: String
+	var type: String
+	var sun: String
+	var water: String
+	var temperature: String
+	var id: String
 }
 
-enum Categ: String, Codable {
-	case electronics = "electronics"
-	case jewelery = "jewelery"
-	case menSClothing = "men's clothing"
-	case womenSClothing = "women's clothing"
+struct Image: Codable {
+  let imageData: Data?
+  init(withImage image: Data) {
+	self.imageData = image
+  }
+  func getImage() -> UIImage? {
+	guard let imageData = self.imageData else {
+	  return nil
+	}
+	let image = UIImage(data: imageData)
+	return image
+  }
 }
 
-struct Rating: Codable {
-	let rate: Double
-	let count: Int
-}

@@ -15,5 +15,6 @@ pod 'Firebase/Storage'
 pod 'Firebase/Database'
 pod 'Firebase/Analytics'
 pod 'Firebase/Core'
+pod 'NVActivityIndicatorView'
 
 end

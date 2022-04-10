@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import NVActivityIndicatorView
 
 class CatalogViewController: UIViewController {
 
 	var filtered = [Flower]()
 	var searchActive : Bool = false
-	var flowers = [Flower]()
+static var flowers = [Flower]()
 	var firebaseManager = FirebaseManager()
 	var sort: String?
+
+	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
+																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
 
 	var scView: UIScrollView = {
 		var scView = UIScrollView(frame:.zero)
@@ -29,8 +33,7 @@ class CatalogViewController: UIViewController {
 		search.translatesAutoresizingMaskIntoConstraints = false
 		return search
 	}()
-
-	var sourceArray = [ProductInCart]()
+	
 	private lazy var itemsCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .vertical
@@ -54,9 +57,11 @@ class CatalogViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		view.backgroundColor = .systemBackground
 		view.addSubview(itemsCollection)
 		view.addSubview(search)
 		view.addSubview(scView)
+		view.addSubview(activityIndicatorView)
 		itemsCollection.dataSource = self
 		itemsCollection.delegate = self
 		search.delegate = self
@@ -66,39 +71,45 @@ class CatalogViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		activityIndicatorView.startAnimating()
 		tabBarController?.tabBar.isHidden = false
 		loadInfo(sort: sort)
 	}
 
 	func loadInfo(sort: String?) {
-		flowers.removeAll()
+		CatalogViewController.flowers.removeAll()
 		firebaseManager.fetchMain(document: "Flowers") { flower in
 			if self.sort == nil {
-				self.flowers.append(flower)
+				CatalogViewController.flowers.append(flower)
 				self.itemsCollection.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			}
 			else {
 				switch sort {
 				case "Living room":
 					if flower.type == "Living room" {
-						self.flowers.append(flower)
+						CatalogViewController.flowers.append(flower)
 					}
 					self.itemsCollection.reloadData()
+					self.activityIndicatorView.stopAnimating()
 				case "Bathroom":
 					if flower.type == "Bathroom" {
-						self.flowers.append(flower)
+						CatalogViewController.flowers.append(flower)
 					}
 					self.itemsCollection.reloadData()
+					self.activityIndicatorView.stopAnimating()
 				case "Bedroom":
 					if flower.type == "Bedroom" {
-						self.flowers.append(flower)
+						CatalogViewController.flowers.append(flower)
 					}
 					self.itemsCollection.reloadData()
+					self.activityIndicatorView.stopAnimating()
 				case "Kitchen":
 					if flower.type == "Kitchen" {
-						self.flowers.append(flower)
-						self.itemsCollection.reloadData()
+						CatalogViewController.flowers.append(flower)
 					}
+					self.itemsCollection.reloadData()
+					self.activityIndicatorView.stopAnimating()
 				default: 	break
 				}
 			}
@@ -126,62 +137,41 @@ class CatalogViewController: UIViewController {
 	}
 
 	@objc func btnTouch(_ button: UIButton) {
-		self.flowers.removeAll()
+		activityIndicatorView.startAnimating()
+		CatalogViewController.flowers.removeAll()
 		firebaseManager.fetchMain(document: "Flowers") { flower in
 			switch button.accessibilityIdentifier {
 			case "All":
-				self.flowers.append(flower)
+				CatalogViewController.flowers.append(flower)
 				self.itemsCollection.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			case "Living room":
 				if flower.type == "Living room" {
-					self.flowers.append(flower)
+					CatalogViewController.flowers.append(flower)
 				}
 				self.itemsCollection.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			case "Bathroom":
 				if flower.type == "Bathroom" {
-					self.flowers.append(flower)
+					CatalogViewController.flowers.append(flower)
 				}
 				self.itemsCollection.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			case "Bedroom":
 				if flower.type == "Bedroom" {
-					self.flowers.append(flower)
+					CatalogViewController.flowers.append(flower)
 				}
 				self.itemsCollection.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			case "Kitchen":
 				if flower.type == "Kitchen" {
-					self.flowers.append(flower)
-					self.itemsCollection.reloadData()
+					CatalogViewController.flowers.append(flower)
 				}
+				self.itemsCollection.reloadData()
+				self.activityIndicatorView.stopAnimating()
 			default: 	break
 			}
 		}
-	}
-
-	func filterProposeItems(filter: String) -> [Flower] {
-		var filterArray = [Flower]()
-		firebaseManager.fetchMain(document: "Flowers") { flower in
-			switch filter {
-			case "Living room":
-				if flower.type == "Living room" {
-					filterArray.append(flower)
-				}
-				self.itemsCollection.reloadData()
-			case "Bathroom":
-				if flower.type == "Bathroom" {
-					filterArray.append(flower)
-				}
-			case "Bedroom":
-				if flower.type == "Bedroom" {
-					self.flowers.append(flower)
-				}
-			case "Kitchen":
-				if flower.type == "Kitchen" {
-					filterArray.append(flower)
-				}
-			default: 	break
-			}
-		}
-		return filterArray
 	}
 
 	func makeConstants() {
@@ -213,7 +203,7 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 		}
 		else
 		{
-			return flowers.count
+			return CatalogViewController.flowers.count
 		}
 	}
 
@@ -228,7 +218,7 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 				as? ShopCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-		if !flowers.isEmpty {
+		if !CatalogViewController.flowers.isEmpty {
 			if searchActive {
 				cell.photoOfProduct.layer.cornerRadius = 10
 				cell.photoOfProduct.image = filtered[indexPath.row].image?.getImage()
@@ -237,8 +227,8 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 			else
 			{
 				cell.photoOfProduct.layer.cornerRadius = 10
-				cell.photoOfProduct.image = flowers[indexPath.row].image?.getImage()
-				cell.config(madel: flowers[indexPath.row])
+				cell.photoOfProduct.image = CatalogViewController.flowers[indexPath.row].image?.getImage()
+				cell.config(madel: CatalogViewController.flowers[indexPath.row])
 
 			}
 		}
@@ -276,11 +266,12 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let flower = self.flowers[indexPath.row]
-		flowers.removeAll {
+		let flower = CatalogViewController.flowers[indexPath.row]
+		var new = CatalogViewController.flowers
+		new.removeAll {
 			$0.type != flower.type
 		}
-		let vc = SingleItemViewController(flower: flower, flowerArray: flowers)
+		let vc = SingleItemViewController(flower: flower, flowerArray: new)
 		self.navigationController?.pushViewController(vc, animated: true)
 	}
 }
@@ -306,38 +297,13 @@ extension CatalogViewController: UISearchBarDelegate {
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 
 		if searchBar.text! == " "  {
-			filtered = flowers
+			filtered = CatalogViewController.flowers
 			itemsCollection.reloadData()
 		} else {
-			filtered = flowers.filter({ (item) -> Bool in
+			filtered = CatalogViewController.flowers.filter({ (item) -> Bool in
 				return (item.title.localizedCaseInsensitiveContains(String(searchBar.text!)))
 			})
 			itemsCollection.reloadData()
 		}
 	}
-}
-struct Flower: Codable {
-	var description: String
-	var image: Image?
-	var price: String
-	var title: String
-	var type: String
-	var sun: String
-	var water: String
-	var temperature: String
-	var id: String
-}
-
-struct Image: Codable {
-  let imageData: Data?
-  init(withImage image: Data) {
-	self.imageData = image
-  }
-  func getImage() -> UIImage? {
-	guard let imageData = self.imageData else {
-	  return nil
-	}
-	let image = UIImage(data: imageData)
-	return image
-  }
 }
