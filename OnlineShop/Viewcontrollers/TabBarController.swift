@@ -58,7 +58,7 @@ class MainTabBarController: UITabBarController {
 								   image: heartFillImage),
 			createNavController(for: ProfileViewController(),
 								   title: NSLocalizedString("Profile", comment: ""),
-								   image: personFillImage),
+								   image: personFillImage)
 		]
 	}
 

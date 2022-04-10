@@ -269,12 +269,13 @@ class ProfileViewController: UIViewController {
 		return lable
 	}()
 
+	let contactsView = UIView().createCustomView()
+	let orderView = UIView().createCustomView()
+	let cardView = UIView().createCustomView()
+	let profileContactsView = UIView().createCustomView()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		let contactsView = createCustomView()
-		let orderView = createCustomView()
-		let cardView = createCustomView()
-		let profileContactsView = createCustomView()
 		view.backgroundColor = .systemBackground
 		view.addSubview(photoOfProfile)
 		view.addSubview(contactsView)
@@ -310,7 +311,6 @@ class ProfileViewController: UIViewController {
 		profileContactsView.addSubview(advertesingPhoneLabel)
 		profileContactsView.addSubview(phoneLabel)
 		profileContactsView.addSubview(mailLabel)
-
 
 		NSLayoutConstraint.activate([
 			contactsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
@@ -360,8 +360,6 @@ class ProfileViewController: UIViewController {
 			cardTimeLabel.topAnchor.constraint(equalTo: cardNumberLabel.bottomAnchor, constant: 10),
 			cardTimeLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -5),
 
-
-
 			profileContactsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
 			profileContactsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
 			profileContactsView.heightAnchor.constraint(equalToConstant: view.frame.height/9),
@@ -394,9 +392,6 @@ class ProfileViewController: UIViewController {
 			advertesingMailLabel.trailingAnchor.constraint(equalTo: profileContactsView.trailingAnchor, constant: -10),
 			advertesingMailLabel.topAnchor.constraint(equalTo: mailLabel.bottomAnchor),
 			advertesingMailLabel.bottomAnchor.constraint(equalTo: profileContactsView.bottomAnchor, constant: -5),
-
-
-
 
 			deliveryImage.leadingAnchor.constraint(equalTo: orderView.leadingAnchor, constant: 10),
 			deliveryImage.widthAnchor.constraint(equalToConstant: 50),
@@ -463,21 +458,6 @@ class ProfileViewController: UIViewController {
 			suppordAccessebilityLabel.topAnchor.constraint(equalTo: contactsView.topAnchor, constant: 10),
 
 		])
-
-
-		func createCustomView() -> UIView {
-			let mainView = UIView()
-			mainView.translatesAutoresizingMaskIntoConstraints = false
-			mainView.backgroundColor = .systemBackground
-			mainView.layer.cornerRadius = 20
-			mainView.layer.borderWidth = 0
-			mainView.layer.shadowColor = UIColor.systemGray.cgColor
-			mainView.layer.shadowOffset = CGSize(width: 0, height: 0)
-			mainView.layer.shadowRadius = 8
-			mainView.layer.shadowOpacity = 0.5
-			mainView.layer.masksToBounds = false
-			return mainView
-		}
 
 	}
 

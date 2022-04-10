@@ -21,6 +21,11 @@
 		BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */; };
 		BF7AFDEB27F4EBE700956BCA /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDEA27F4EBE700956BCA /* APIService.swift */; };
 		BFB717DB27FFA6B200851F7D /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB717DA27FFA6B200851F7D /* FirebaseManager.swift */; };
+		BFBC7EFA2801C33500C88C29 /* EnterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7EF92801C33500C88C29 /* EnterViewController.swift */; };
+		BFBC7EFF2801F12300C88C29 /* NewAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */; };
+		BFBC7F012801FE6E00C88C29 /* DataBaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7F002801FE6E00C88C29 /* DataBaseFile.swift */; };
+		BFBC7F0328024C7000C88C29 /* InViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7F0228024C6F00C88C29 /* InViewController.swift */; };
+		BFBC7F05280264D600C88C29 /* videomain.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = BFBC7F0428025E9500C88C29 /* videomain.mp4 */; };
 		BFC30E7127FC863700A53419 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFC30E7027FC863700A53419 /* GoogleService-Info.plist */; };
 		BFCEB5A327F73EB300A4A6B2 /* CartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */; };
 		BFCEB5A727F76D7C00A4A6B2 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFCEB5A627F76D7C00A4A6B2 /* FavoriteViewController.swift */; };
@@ -51,6 +56,11 @@
 		BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModel.swift; sourceTree = "<group>"; };
 		BF7AFDEA27F4EBE700956BCA /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		BFB717DA27FFA6B200851F7D /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		BFBC7EF92801C33500C88C29 /* EnterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterViewController.swift; sourceTree = "<group>"; };
+		BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountViewController.swift; sourceTree = "<group>"; };
+		BFBC7F002801FE6E00C88C29 /* DataBaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBaseFile.swift; sourceTree = "<group>"; };
+		BFBC7F0228024C6F00C88C29 /* InViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InViewController.swift; sourceTree = "<group>"; };
+		BFBC7F0428025E9500C88C29 /* videomain.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = videomain.mp4; sourceTree = "<group>"; };
 		BFC30E7027FC863700A53419 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BFCEB5A227F73EB300A4A6B2 /* CartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartModel.swift; sourceTree = "<group>"; };
 		BFCEB5A627F76D7C00A4A6B2 /* FavoriteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +106,7 @@
 		BF7AFDBE27F494BB00956BCA = {
 			isa = PBXGroup;
 			children = (
+				BFBC7F0428025E9500C88C29 /* videomain.mp4 */,
 				BF7AFDC927F494BB00956BCA /* OnlineShop */,
 				BF7AFDC827F494BB00956BCA /* Products */,
 				7948E8937A421FD0D6F2D7A8 /* Pods */,
@@ -126,9 +137,20 @@
 			path = OnlineShop;
 			sourceTree = "<group>";
 		};
+		BFBC7EF82801C30F00C88C29 /* Authentification */ = {
+			isa = PBXGroup;
+			children = (
+				BFBC7EF92801C33500C88C29 /* EnterViewController.swift */,
+				BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */,
+				BFBC7F0228024C6F00C88C29 /* InViewController.swift */,
+			);
+			path = Authentification;
+			sourceTree = "<group>";
+		};
 		BFCEB5A827F78F8C00A4A6B2 /* Viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				BFBC7EF82801C30F00C88C29 /* Authentification */,
 				BFF3184E27FB7BF1008E292B /* ProfileViewController.swift */,
 				BF7AFDCE27F494BB00956BCA /* TabBarController.swift */,
 				BF7AFDE227F49F4800956BCA /* SingleItemViewController.swift */,
@@ -156,6 +178,7 @@
 				BFB717DA27FFA6B200851F7D /* FirebaseManager.swift */,
 				BFF3184627FB32F7008E292B /* Constants.swift */,
 				BF7AFDCC27F494BB00956BCA /* SceneDelegate.swift */,
+				BFBC7F002801FE6E00C88C29 /* DataBaseFile.swift */,
 				BF7AFDCA27F494BB00956BCA /* AppDelegate.swift */,
 			);
 			path = Managers;
@@ -236,6 +259,7 @@
 			files = (
 				BF7AFDD727F494BD00956BCA /* LaunchScreen.storyboard in Resources */,
 				BFC30E7127FC863700A53419 /* GoogleService-Info.plist in Resources */,
+				BFBC7F05280264D600C88C29 /* videomain.mp4 in Resources */,
 				BF7AFDD427F494BD00956BCA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,9 +318,12 @@
 				BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */,
 				BFF3185527FBC4F1008E292B /* FavoriteCollectionViewCell.swift in Sources */,
 				BF7AFDCF27F494BB00956BCA /* TabBarController.swift in Sources */,
+				BFBC7EFF2801F12300C88C29 /* NewAccountViewController.swift in Sources */,
 				BF7AFDCB27F494BB00956BCA /* AppDelegate.swift in Sources */,
+				BFBC7F0328024C7000C88C29 /* InViewController.swift in Sources */,
 				BFCEB5A327F73EB300A4A6B2 /* CartModel.swift in Sources */,
 				BFF3184F27FB7BF1008E292B /* ProfileViewController.swift in Sources */,
+				BFBC7EFA2801C33500C88C29 /* EnterViewController.swift in Sources */,
 				BF7AFDDF27F49CE100956BCA /* ShopCartViewController.swift in Sources */,
 				BFF3184B27FB5DEB008E292B /* CartCollectionViewCell.swift in Sources */,
 				BF7AFDE327F49F4800956BCA /* SingleItemViewController.swift in Sources */,
@@ -304,6 +331,7 @@
 				BFB717DB27FFA6B200851F7D /* FirebaseManager.swift in Sources */,
 				BFCEB5A727F76D7C00A4A6B2 /* FavoriteViewController.swift in Sources */,
 				BFF3185127FB99E4008E292B /* DeliveryOrderView.swift in Sources */,
+				BFBC7F012801FE6E00C88C29 /* DataBaseFile.swift in Sources */,
 				BF7AFDE727F4A7E200956BCA /* ItemCollectionViewCell.swift in Sources */,
 				BFF3184727FB32F7008E292B /* Constants.swift in Sources */,
 				BF7AFDCD27F494BB00956BCA /* SceneDelegate.swift in Sources */,

@@ -18,14 +18,6 @@ class HomeViewController: UIViewController {
 		return scrollView
 	}()
 
-
-	var search: UISearchBar = {
-		var search = UISearchBar()
-		search.placeholder = "Find your plant"
-		search.translatesAutoresizingMaskIntoConstraints = false
-		return search
-	}()
-
 	private lazy  var namelLabel: UILabel = {
 		var title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
@@ -87,8 +79,7 @@ class HomeViewController: UIViewController {
 		firebaseManager.fetchImage(collection: "Sale", imageView: saleImage)
 		firebaseManager.fetchImage(collection: "Accessories", imageView: accessoryImage)
 		view.addSubview(scrollView)
-		view.addSubview(search)
-
+		
 		scrollView.addSubview(saleView)
 		saleView.addSubview(saleImage)
 		scrollView.addSubview(mainCollection)
@@ -102,14 +93,9 @@ class HomeViewController: UIViewController {
 	}
 	
 	func makeConstraints() {
-		NSLayoutConstraint.activate([
-			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-			search.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			search.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-		])
 
 		NSLayoutConstraint.activate([
-			scrollView.topAnchor.constraint(equalTo: search.bottomAnchor),
+			scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 			scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 			scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
