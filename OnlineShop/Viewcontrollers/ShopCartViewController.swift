@@ -43,10 +43,10 @@ var flowers = [Flower]()
 		title.textColor = Constants().greenColor
 		return title
 	}()
-	var totalPrice = Double(0)
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		view.addSubview(itemsCollection)
 		view.addSubview(payCartButton)
 		view.addSubview(totalLabel)
@@ -81,13 +81,15 @@ var flowers = [Flower]()
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		tabBarController?.tabBar.isHidden = false
+		self.flowers.removeAll()
+		var totalPrice = Double(0)
 		FirebaseManager().fetchCartItem(document: "users") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			for flower in self.flowers {
 				let a = Double(flower.price)
-				self.totalPrice += Double(round(a ?? 0))
-				self.priceLabel.text = String(self.totalPrice)
+				totalPrice += Double(round(a ?? 0))
+				self.priceLabel.text = String(totalPrice)
 			}
 		}
 	}
