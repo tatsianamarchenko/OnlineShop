@@ -28,7 +28,8 @@ final class DataBaseManager {
 																	 "zip": user.zip,
 																	 "email": user.email,
 																	 "passward": user.passward,
-																	 "cart": []]) { error in
+																	 "cart": [],
+																	 "favorite": []]) { error in
 					if error != nil {
 						completion(error!)
 					}
@@ -74,4 +75,17 @@ final class DataBaseManager {
 		let passward: String
 	}
 
+}
+
+
+class IndexedButton: UIButton {
+  var buttonIndexPath: IndexPath
+
+  init(buttonIndexPath: IndexPath) {
+	self.buttonIndexPath = buttonIndexPath
+	super.init(frame: .zero)
+  }
+  required init?(coder aDecoder: NSCoder) {
+	fatalError("init(coder:) has not been implemented")
+  }
 }

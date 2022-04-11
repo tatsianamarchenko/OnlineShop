@@ -10,46 +10,55 @@ import Alamofire
 
 class FavoriteViewController: UIViewController {
 
-		private lazy var itemsCollection : UICollectionView = {
-			let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
-			layout.scrollDirection = .vertical
-			var collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-			collection.register(FavoriteCollectionViewCell.self, forCellWithReuseIdentifier: FavoriteCollectionViewCell.identifier)
-			collection.translatesAutoresizingMaskIntoConstraints = false
-			collection.showsVerticalScrollIndicator = false
-			collection.backgroundColor = .systemBackground
-			collection.clipsToBounds = true
-			return collection
-		}()
+	var flowers = [Flower]()
 
-		override func viewDidLoad() {
-			super.viewDidLoad()
-			view.addSubview(itemsCollection)
-			itemsCollection.dataSource = self
-			itemsCollection.delegate = self
-			makeConstraints()
-		}
+	private lazy var itemsCollection : UICollectionView = {
+		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
+		layout.scrollDirection = .vertical
+		var collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+		collection.register(FavoriteCollectionViewCell.self, forCellWithReuseIdentifier: FavoriteCollectionViewCell.identifier)
+		collection.translatesAutoresizingMaskIntoConstraints = false
+		collection.showsVerticalScrollIndicator = false
+		collection.backgroundColor = .systemBackground
+		collection.clipsToBounds = true
+		return collection
+	}()
 
-		func makeConstraints() {
-			NSLayoutConstraint.activate([
-				itemsCollection.topAnchor.constraint(equalTo: view.topAnchor),
-				itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-				itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-				itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-			])
-		}
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		view.addSubview(itemsCollection)
+		itemsCollection.dataSource = self
+		itemsCollection.delegate = self
+		makeConstraints()
+	}
 
-		override func viewWillAppear(_ animated: Bool) {
-			super.viewWillAppear(animated)
-			tabBarController?.tabBar.isHidden = false
+	func makeConstraints() {
+		NSLayoutConstraint.activate([
+			itemsCollection.topAnchor.constraint(equalTo: view.topAnchor),
+			itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+			itemsCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+			itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+		])
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		tabBarController?.tabBar.isHidden = false
+		self.flowers.removeAll()
+		var totalPrice = Double(0)
+		FirebaseManager().fetchCartItem(collection: "users", field: "favorite") { flower in
+			self.flowers.append(flower)
+			self.itemsCollection.reloadData()
 		}
 	}
+
+}
 
 
 	extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 		func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-			return 10
+			return self.flowers.count
 		}
 
 		func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -63,9 +72,7 @@ class FavoriteViewController: UIViewController {
 					as? FavoriteCollectionViewCell else {
 						return UICollectionViewCell()
 					}
-			cell.nameLabel.text = "Lavander"
-			cell.photoOfProduct.layer.cornerRadius = 10
-			cell.photoOfProduct.image = UIImage(named: "lol")
+			cell.config(model: flowers[indexPath.row])
 			cell.layer.cornerRadius = 20
 			cell.layer.borderWidth = 0
 			cell.layer.shadowColor = UIColor.systemGray.cgColor

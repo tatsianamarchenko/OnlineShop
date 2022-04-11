@@ -332,9 +332,8 @@ extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDa
 				as? ShopCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-		cell.photoOfProduct.layer.cornerRadius = 10
-		cell.photoOfProduct.image = flowerArray?[indexPath.row].image?.getImage()
-		cell.config(madel: (flowerArray?[indexPath.row])!)
+	//	cell.photoOfProduct.layer.cornerRadius = 10
+		cell.config(madel: (flowerArray?[indexPath.row])!, indexPath: indexPath)
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor

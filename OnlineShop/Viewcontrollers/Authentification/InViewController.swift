@@ -68,8 +68,8 @@ class InViewController: UIViewController {
 }
 
 extension UIButton {
-	func createCustomButton(title: String) -> UIButton {
-		let button = UIButton()
+	func createCustomButton(title: String) -> IndexedButton {
+		let button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
 		button.setTitle(title, for: .normal)
 		button.setTitleColor(Constants().greenColor, for: .selected)
 		button.titleLabel?.textAlignment = .center

@@ -92,13 +92,13 @@ class FirebaseManager {
 		}
 	}
 
-	func fetchCartItem(document: String, complition: @escaping (Flower)-> Void) {
+	func fetchCartItem(collection: String, field: String, complition: @escaping (Flower)-> Void) {
 		guard let user = Auth.auth().currentUser?.email else {return}
 		let db = Firestore.firestore()
-		var collection = db.collection(document).document(user)
+		var collection = db.collection(collection).document(user)
 
 		collection.getDocument { documentSnapshot, error in
-			var cart = documentSnapshot?["cart"] as? [String]
+			var cart = documentSnapshot?[field] as? [String]
 			guard let cart = cart else {return}
 			for i in 0..<cart.count {
 				let collection = db.collection("Flowers").document(cart[i])
@@ -126,38 +126,5 @@ class FirebaseManager {
 				}
 			}
 		}
-	}
-
-
-	func fetch (document: String, completion: @escaping ([String : Any]) -> Void)  {
-		db.collection(document).getDocuments { (querySnapshot, error) in
-			guard let documents = querySnapshot?.documents else {
-				print("No documents")
-				return
-			}
-			documents.map { queryDocumentSnapshot in
-				let	data = queryDocumentSnapshot.data()
-				completion(data)
-			}
-		}
-		//		firebaseManager.fetch(document: "Flowers") { data in
-		//			var image: Image?
-		//			let type = data["type"] as? String ?? ""
-		//			let description = data["description"] as? String ?? ""
-		//			let title = data["title"] as? String ?? ""
-		//			let price = data["price"] as? String ?? ""
-		//			let path = data["image"] as? String ?? ""
-		//			let id = title
-		//			let storage = Storage.storage().reference()
-		//			let fileRef = storage.child(path)
-		//			fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-		//				if error == nil {
-		//					image = Image(withImage: data!)
-		//					let f = Flower(description: description, image: image, price: price, title: title, type: type, id: id)
-		//					self.flowers.append(f)
-		//					self.itemsCollection.reloadData()
-		//				}
-		//			}
-		//		}
 	}
 }

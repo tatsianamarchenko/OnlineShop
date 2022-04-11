@@ -7,12 +7,13 @@
 
 import UIKit
 import GMStepper
+import Firebase
 
 class FavoriteCollectionViewCell: UICollectionViewCell {
 
 	static let identifier = "FavoriteCollectionViewCell"
-
-	var nameLabel: UILabel = {
+	var flower: Flower?
+	private lazy var nameLabel: UILabel = {
 		var lable = UILabel()
 		lable.textColor = Constants().darkGreyColor
 		lable.font = .systemFont(ofSize: 20, weight: .medium)
@@ -37,18 +38,16 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		lable.font = .systemFont(ofSize: 15, weight: .regular)
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.textColor = Constants().darkGreyColor
-		lable.text = "For Bathroom"
 		return lable
 	}()
 	
-	var  addToCartButton = UIButton().createCustomButton(title: "$100")
+	var  addToCartButton = UIButton().createCustomButton(title: "$0")
 
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.numberOfLines = 2
 		lable.font = .systemFont(ofSize: 15)
-		lable.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
 		return lable
 	}()
 	private lazy var stepper: GMStepper = {
@@ -67,6 +66,16 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		stepper.stepValue = 1
 		return stepper
 	}()
+
+	func config(model: Flower) {
+		nameLabel.text = model.title
+		typeLable.text = model.type
+		descriptionLable.text = model.description
+		addToCartButton.setTitle(model.price, for: .normal)
+		photoOfProduct.image = model.image?.getImage()
+		flower = model
+		addToCartButton.addTarget(self, action: #selector(toCart), for: .touchUpInside)
+	}
 
 
 	var photoOfProduct: UIImageView = {
@@ -90,6 +99,33 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		addSubview(addToCartButton)
 		makeConstants()
 	}
+
+	@objc func toCart(_ sender: IndexedButton) {
+		let db = Firestore.firestore()
+		guard let user = Auth.auth().currentUser?.email else {return}
+		var collection = db.collection("users").document(user)
+		collection.getDocument { documentSnapshot, error in
+			var cart = documentSnapshot?["cart"] as? [String]
+			cart?.append(self.flower!.id)
+			collection.updateData(["cart": cart]) { error in
+				if error != nil {
+					self.createAlert(string: error?.localizedDescription ?? "")
+				} else {
+					self.createAlert(string: "Added to cart")
+				}
+
+			}
+		}
+	}
+
+	func createAlert(string: String) {
+		let alert = UIAlertController(title: "Added", message: string, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+		if let vc = self.next(ofType: UIViewController.self) {
+			vc.present(alert, animated: true, completion: nil)
+		}
+	}
+
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
@@ -140,4 +176,15 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		nameLabel.text = nil
 	}
 
+}
+
+extension UIResponder {
+	func next<T:UIResponder>(ofType: T.Type) -> T? {
+		let r = self.next
+		if let r = r as? T ?? r?.next(ofType: T.self) {
+			return r
+		} else {
+			return nil
+		}
+	}
 }

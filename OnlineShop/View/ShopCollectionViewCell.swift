@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ShopCollectionViewCell: UICollectionViewCell {
 
@@ -23,9 +24,10 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 return lable
 	 }()
 
-	 var  removeButton: UIButton = {
-		 var button = UIButton()
+	 var  favoriteButton: IndexedButton = {
+		 var button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
 		 button.setImage(UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
+		 button.addTarget(self, action: #selector(toFavorite), for: .touchUpInside)
 		 button.titleLabel?.textAlignment = .center
 		 button.translatesAutoresizingMaskIntoConstraints = false
 		 return button
@@ -46,7 +48,6 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 lable.translatesAutoresizingMaskIntoConstraints = false
 		 lable.textColor = Constants().darkGreyColor
 		 lable.textAlignment = .right
-		 lable.text = "$100"
 		 return lable
 	 }()
 
@@ -55,22 +56,52 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 lable.translatesAutoresizingMaskIntoConstraints = false
 		 lable.numberOfLines = 2
 		 lable.font = .systemFont(ofSize: 15)
-		 lable.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
 		 return lable
 	 }()
 
-	 var photoOfProduct: UIImageView = {
+	private lazy var photoOfProduct: UIImageView = {
 		 var image = UIImageView()
 		 image.translatesAutoresizingMaskIntoConstraints = false
 		 image.contentMode = .scaleToFill
 		 return image
 	 }()
 
-	func config(madel: Flower) {
+
+	@objc func toFavorite(_ sender: IndexedButton) {
+		let index = sender.buttonIndexPath.row
+		let db = Firestore.firestore()
+		guard let user = Auth.auth().currentUser?.email else {return}
+		var collection = db.collection("users").document(user)
+		collection.getDocument { documentSnapshot, error in
+			var favorite = documentSnapshot?["favorite"] as? [String]
+			favorite?.append(CatalogViewController.flowers[sender.buttonIndexPath.row].id)
+			collection.updateData(["favorite": favorite]) { error in
+				if error != nil {
+					self.createAlert(string: error?.localizedDescription ?? "")
+				} else {
+					self.createAlert(string: "Added to favorite")
+				}
+
+			}
+		}
+	}
+
+	func createAlert(string: String) {
+		let alert = UIAlertController(title: "Added", message: string, preferredStyle: .alert)
+		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+		if let vc = self.next(ofType: UIViewController.self) {
+			vc.present(alert, animated: true, completion: nil)
+		}
+	}
+
+
+	func config(madel: Flower, indexPath: IndexPath) {
 		nameLabel.text = madel.title
 		descriptionLable.text = madel.description
 		typeLable.text = madel.type
 		priceLable.text = ("$\(madel.price)")
+		photoOfProduct.image = madel.image?.getImage()
+		favoriteButton.buttonIndexPath = indexPath
 	}
 
 	 override init(frame: CGRect) {
@@ -83,7 +114,7 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 addSubview(descriptionLable)
 		 addSubview(typeLable)
 		 addSubview(priceLable)
-		 addSubview(removeButton)
+		 addSubview(favoriteButton)
 		 makeConstants()
 	 }
 
@@ -116,8 +147,8 @@ class ShopCollectionViewCell: UICollectionViewCell {
 			 priceLable.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 5),
 			 priceLable.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
 
-			 removeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-			 removeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
+			 favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+			 favoriteButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
 		 ])
 	 }
 

@@ -83,7 +83,7 @@ var flowers = [Flower]()
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
 		var totalPrice = Double(0)
-		FirebaseManager().fetchCartItem(document: "users") { flower in
+		FirebaseManager().fetchCartItem(collection: "users", field: "cart") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			for flower in self.flowers {

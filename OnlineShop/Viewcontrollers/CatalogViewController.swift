@@ -7,6 +7,7 @@
 
 import UIKit
 import NVActivityIndicatorView
+import Firebase
 
 class CatalogViewController: UIViewController {
 
@@ -193,6 +194,7 @@ static var flowers = [Flower]()
 			itemsCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 		])
 	}
+
 }
 
 extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -220,15 +222,11 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 				}
 		if !CatalogViewController.flowers.isEmpty {
 			if searchActive {
-				cell.photoOfProduct.layer.cornerRadius = 10
-				cell.photoOfProduct.image = filtered[indexPath.row].image?.getImage()
-				cell.config(madel: filtered[indexPath.row])
+				cell.config(madel: filtered[indexPath.row], indexPath: indexPath)
 			}
 			else
 			{
-				cell.photoOfProduct.layer.cornerRadius = 10
-				cell.photoOfProduct.image = CatalogViewController.flowers[indexPath.row].image?.getImage()
-				cell.config(madel: CatalogViewController.flowers[indexPath.row])
+				cell.config(madel: CatalogViewController.flowers[indexPath.row], indexPath: indexPath)
 
 			}
 		}
