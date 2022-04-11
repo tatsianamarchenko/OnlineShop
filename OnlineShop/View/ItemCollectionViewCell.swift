@@ -10,7 +10,7 @@ import UIKit
 class ItemCollectionViewCell: UICollectionViewCell {
 	static let identifier = "ItemCollectionViewCell"
 
-	var placeLabel: UILabel = {
+	private lazy var placeLabel: UILabel = {
 		var lable = UILabel()
 		lable.textColor = .label
 		lable.backgroundColor = .systemBackground
@@ -21,7 +21,7 @@ class ItemCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 
-	var photoOfProduct: UIImageView = {
+	private lazy var photoOfProduct: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
@@ -36,6 +36,15 @@ class ItemCollectionViewCell: UICollectionViewCell {
 		contentView.layer.cornerRadius = 10
 		photoOfProduct.addSubview(placeLabel)
 		addSubview(photoOfProduct)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		placeLabel.text = nil
 	}
 
 	override func layoutSubviews() {
@@ -54,16 +63,9 @@ class ItemCollectionViewCell: UICollectionViewCell {
 			placeLabel.leadingAnchor.constraint(equalTo: photoOfProduct.leadingAnchor, constant: 30),
 			placeLabel.widthAnchor.constraint(equalToConstant: 80),
 		])
-
 	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+	func confif(model: Category) {
+		placeLabel.text = model.name
+		photoOfProduct.image = model.image?.getImage()
 	}
-
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		placeLabel.text = nil
-	}
-	
 }

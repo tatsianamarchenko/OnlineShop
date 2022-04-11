@@ -41,7 +41,7 @@ class DeliveryOrderView: UIView {
 		return title
 	}()
 
-	var mainView: UIView = {
+	private lazy var mainView: UIView = {
 		let mainView = UIView()
 		mainView.translatesAutoresizingMaskIntoConstraints = false
 		mainView.backgroundColor = .systemBackground
@@ -55,7 +55,7 @@ class DeliveryOrderView: UIView {
 		return mainView
 	}()
 
-	var contactsImage: UIImageView = {
+	private lazy var contactsImage: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(systemName: "headphones")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +63,7 @@ class DeliveryOrderView: UIView {
 		return image
 	}()
 
-	var  chatButton: UIButton = {
+	private lazy var  chatButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Chat", for: .normal)
 		button.titleLabel?.textAlignment = .center
@@ -73,7 +73,7 @@ class DeliveryOrderView: UIView {
 		return button
 	}()
 
-	var  phoneButton: UIButton = {
+	private lazy var  phoneButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Phone", for: .normal)
 		button.setTitleColor(Constants().greenColor, for: .normal)

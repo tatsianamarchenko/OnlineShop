@@ -19,6 +19,7 @@
 		BF7AFDE527F49F9400956BCA /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE427F49F9400956BCA /* CatalogViewController.swift */; };
 		BF7AFDE727F4A7E200956BCA /* ItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */; };
 		BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */; };
+		BF7B79FC2804BD4C0028B8FD /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF7B79FB2804BD4C0028B8FD /* Extensions.swift */; };
 		BFBC7EFA2801C33500C88C29 /* EnterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7EF92801C33500C88C29 /* EnterViewController.swift */; };
 		BFBC7EFF2801F12300C88C29 /* NewAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */; };
 		BFBC7F012801FE6E00C88C29 /* DataBaseFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7F002801FE6E00C88C29 /* DataBaseFile.swift */; };
@@ -50,6 +51,7 @@
 		BF7AFDE427F49F9400956BCA /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewController.swift; sourceTree = "<group>"; };
 		BF7AFDE627F4A7E200956BCA /* ItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViewCell.swift; sourceTree = "<group>"; usesTabs = 1; };
 		BF7AFDE827F4EA5C00956BCA /* ProductsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsModel.swift; sourceTree = "<group>"; };
+		BF7B79FB2804BD4C0028B8FD /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		BFBC7EF92801C33500C88C29 /* EnterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterViewController.swift; sourceTree = "<group>"; };
 		BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountViewController.swift; sourceTree = "<group>"; };
 		BFBC7F002801FE6E00C88C29 /* DataBaseFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataBaseFile.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				BF7AFDCC27F494BB00956BCA /* SceneDelegate.swift */,
 				BFBC7F002801FE6E00C88C29 /* DataBaseFile.swift */,
 				BF7AFDCA27F494BB00956BCA /* AppDelegate.swift */,
+				BF7B79FB2804BD4C0028B8FD /* Extensions.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 				BFF3184B27FB5DEB008E292B /* CartCollectionViewCell.swift in Sources */,
 				BF7AFDE327F49F4800956BCA /* SingleItemViewController.swift in Sources */,
 				BFCEB5A727F76D7C00A4A6B2 /* FavoriteViewController.swift in Sources */,
+				BF7B79FC2804BD4C0028B8FD /* Extensions.swift in Sources */,
 				BFF3185127FB99E4008E292B /* DeliveryOrderView.swift in Sources */,
 				BFBC7F012801FE6E00C88C29 /* DataBaseFile.swift in Sources */,
 				BF7AFDE727F4A7E200956BCA /* ItemCollectionViewCell.swift in Sources */,

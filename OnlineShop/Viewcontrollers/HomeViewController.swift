@@ -10,11 +10,11 @@ import NVActivityIndicatorView
 import FirebaseAuth
 
 class HomeViewController: UIViewController {
-	static var flowers = [Flower]()
+
 	var categories = [Category]()
 	var firebaseManager = FirebaseManager()
 	
-	var scrollView : UIScrollView = {
+	private lazy var scrollView : UIScrollView = {
 		var scrollView = UIScrollView()
 		scrollView.translatesAutoresizingMaskIntoConstraints = false
 		return scrollView
@@ -53,7 +53,7 @@ class HomeViewController: UIViewController {
 		return collection
 	}()
 
-	var saleImage: UIImageView = {
+	private lazy var saleImage: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
@@ -62,7 +62,7 @@ class HomeViewController: UIViewController {
 		return image
 	}()
 
-	var accessoryImage: UIImageView = {
+	private lazy var accessoryImage: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
@@ -71,8 +71,8 @@ class HomeViewController: UIViewController {
 		return image
 	}()
 
-	var saleView  = UIView().createCustomView()
-	var accessoriesView  = UIView().createCustomView()
+	private lazy var saleView  = UIView().createCustomView()
+	private lazy var accessoriesView  = UIView().createCustomView()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -98,7 +98,7 @@ class HomeViewController: UIViewController {
 		makeConstraints()
 	}
 	
-	func makeConstraints() {
+	private func makeConstraints() {
 
 		NSLayoutConstraint.activate([
 			scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -179,10 +179,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 					return UICollectionViewCell()
 				}
 		if !categories.isEmpty {
-			cell.placeLabel.text = categories[indexPath.row].name
-			cell.photoOfProduct.image = categories[indexPath.row].image?.getImage()
+			cell.confif(model: categories[indexPath.row])
 		}
-		cell.photoOfProduct.layer.cornerRadius = 10
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor
 		cell.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -224,20 +222,4 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 struct Category: Codable {
 	var image: Image?
 	var name: String
-}
-
-extension UIView {
-	func createCustomView() -> UIView {
-		let mainView = UIView()
-		mainView.translatesAutoresizingMaskIntoConstraints = false
-		mainView.backgroundColor = .systemBackground
-		mainView.layer.cornerRadius = 20
-		mainView.layer.borderWidth = 0
-		mainView.layer.shadowColor = UIColor.systemGray.cgColor
-		mainView.layer.shadowOffset = CGSize(width: 0, height: 0)
-		mainView.layer.shadowRadius = 8
-		mainView.layer.shadowOpacity = 0.5
-		mainView.layer.masksToBounds = false
-		return mainView
-	}
 }

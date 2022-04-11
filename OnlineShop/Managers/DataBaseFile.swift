@@ -14,17 +14,23 @@ import FirebaseStorage
 import CoreMedia
 
 final class FirebaseManager {
+
 	static let shered = FirebaseManager()
-	let db = Firestore.firestore()
-	/// sent new users to database
+	private let db = Firestore.firestore()
+	private let user = Auth.auth().currentUser?.email
+
+	private let cartFieldFirebase = "cart"
+	private let favoriteFieldFirebase = "favorite"
+	private let usersCollectionFirebase = "users"
+
 	public func insertUser(with user: AppUser,  completion: @escaping (Error) -> Void) {
-		Auth.auth().createUser(withEmail: user.email, password: user.passward) { [weak self] authResult, error in
+		Auth.auth().createUser(withEmail: user.email, password: user.passward) { authResult, error in
 			if  error != nil {
 				completion(error!)
 			}
 			else {
 				let db = Firestore.firestore()
-				db.collection("users").document(user.email).setData(["fullName": user.fullName,
+				db.collection(self.usersCollectionFirebase).document(user.email).setData(["fullName": user.fullName,
 																	 "phone": user.phone,
 																	 "adress": user.adress,
 																	 "zip": user.zip,
@@ -37,19 +43,20 @@ final class FirebaseManager {
 					}
 				}
 
-				UserDefaults.standard.set(user.email, forKey: "user")
+				UserDefaults.standard.set(user.email, forKey: Constants().userKey)
 			}
 		}
 	}
 
 	public func enterUser(with email: String, passward: String, completion: @escaping((Result<AuthDataResult, Error>) -> Void)) {
-		Auth.auth().signIn(withEmail: email, password: passward) { [weak self] authResult, error in
+		Auth.auth().signIn(withEmail: email, password: passward) { authResult, error in
 			if  error != nil {
 				completion(.failure(error!))
 			}
 			else {
-				UserDefaults.standard.set(email, forKey: "user")
-				completion(.success(authResult!))
+				UserDefaults.standard.set(email, forKey: Constants().userKey)
+				guard let authResult = authResult else {return}
+				completion(.success(authResult))
 			}
 		}
 	}
@@ -64,7 +71,7 @@ final class FirebaseManager {
 	}
 
 	public func isPasswardValid(_ passward: String) -> Bool {
-		let passwardPredicate = NSPredicate(format: "SELF MATCHES %@", "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}")
+		let passwardPredicate = NSPredicate(format: "SELF MATCHES %@", Constants().validationPredicate)
 		return passwardPredicate.evaluate(with: passward)
 	}
 
@@ -93,7 +100,11 @@ final class FirebaseManager {
 				let fileRef = storage.child(path)
 				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
 					if error == nil {
-						image = Image(withImage: data!)
+						guard let data = data else {
+							return
+						}
+
+						image = Image(withImage: data)
 						let f = Category(image: image, name: name)
 						complition(f)
 					}
@@ -115,13 +126,15 @@ final class FirebaseManager {
 				let fileRef = storage.child(path)
 				fileRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
 					if error == nil {
-						imageView.image = UIImage(data: data!)!
+						guard let data = data else {
+							return
+						}
+						imageView.image = UIImage(data: data)!
 					}
 				}
 			}
 		}
 	}
-
 
 	public func fetchMain(document: String, complition: @escaping (Flower)-> Void) {
 		db.collection(document).getDocuments { (querySnapshot, error) in
@@ -156,15 +169,13 @@ final class FirebaseManager {
 	}
 
 	public func fetchCartItem(collection: String, field: String, complition: @escaping (Flower)-> Void) {
-		guard let user = Auth.auth().currentUser?.email else {return}
-		let db = Firestore.firestore()
+		guard let user = user else {return}
 		var collection = db.collection(collection).document(user)
-
 		collection.getDocument { documentSnapshot, error in
 			var cart = documentSnapshot?[field] as? [String]
 			guard let cart = cart else {return}
 			for i in 0..<cart.count {
-				let collection = db.collection("Flowers").document(cart[i])
+				let collection = self.db.collection("Flowers").document(cart[i])
 				collection.getDocument { documentSnapshot, error in
 					var image: Image?
 					let type = documentSnapshot?["type"] as? String ?? ""
@@ -192,12 +203,12 @@ final class FirebaseManager {
 	}
 
 	public func addToCart(flower: Flower , complition: @escaping (Result<Void, Error>) -> Void) {
-		guard let user = Auth.auth().currentUser?.email else {return}
-		let collection = db.collection("users").document(user)
+		guard let user = user else {return}
+		let collection = db.collection(self.usersCollectionFirebase).document(user)
 		collection.getDocument { documentSnapshot, error in
-			var cart = documentSnapshot?["cart"] as? [String]
+			var cart = documentSnapshot?[self.cartFieldFirebase] as? [String]
 			cart?.append(flower.id)
-			collection.updateData(["cart": cart]) { error in
+			collection.updateData([self.cartFieldFirebase: cart]) { error in
 				if error != nil {
 					complition(.failure(error!))
 				} else {
@@ -209,68 +220,36 @@ final class FirebaseManager {
 	}
 
 	public func addToFavorite(flower: Flower , complition: @escaping (Result<Void, Error>) -> Void) {
-		guard let user = Auth.auth().currentUser?.email else {return}
-		var collection = db.collection("users").document(user)
+		guard let user = user else {return}
+		let collection = db.collection(self.usersCollectionFirebase).document(user)
 		collection.getDocument { documentSnapshot, error in
-			var favorite = documentSnapshot?["favorite"] as? [String]
+			var favorite = documentSnapshot?[self.favoriteFieldFirebase] as? [String]
 			favorite?.append(flower.id)
-			collection.updateData(["favorite": favorite]) { error in
+			collection.updateData([self.favoriteFieldFirebase : favorite]) { error in
 				if error != nil {
 					complition(.failure(error!))
 				} else {
 					complition(.success(()))
 				}
-
 			}
 		}
 	}
 
-//	public func deliteFromFavorite(flower: Flower? , complition: @escaping () -> Void) {
-//		guard let user = Auth.auth().currentUser?.email else {return}
-//		db.collection("users").document(user).updateData(["favorite": FieldValue.delete()])
-//	}
-
 	public func deliteFromFavorite(flower: Flower, complition: @escaping (Flower) -> Void) {
-		guard let user = Auth.auth().currentUser?.email else {return}
-		let a = db.collection("users").document(user)
+		guard let user = user else {return}
+		let a = db.collection(self.usersCollectionFirebase).document(user)
 		complition(flower)
 		a.updateData([
-			"favorite" : FieldValue.arrayRemove([flower.id])
-		]) { error in
-			if let error = error {
-				print("error: \(error)")
-			} else {
-				print("successfully deleted")
-			}
-		}
+			favoriteFieldFirebase : FieldValue.arrayRemove([flower.id])
+		])
 	}
 
 	public func deliteFromCart(flower: Flower, complition: @escaping (Flower) -> Void) {
-		guard let user = Auth.auth().currentUser?.email else {return}
-		let a = db.collection("users").document(user)
+		guard let user = user else {return}
+		let a = db.collection(self.usersCollectionFirebase).document(user)
 		complition(flower)
 		a.updateData([
-			"cart" : FieldValue.arrayRemove([flower.id])
-		]) { error in
-			if let error = error {
-				print("error: \(error)")
-			} else {
-				print("successfully deleted")
-			}
-		}
+			cartFieldFirebase : FieldValue.arrayRemove([flower.id])
+		])
 	}
-
-}
-
-
-class IndexedButton: UIButton {
-  var buttonIndexPath: IndexPath
-
-  init(buttonIndexPath: IndexPath) {
-	self.buttonIndexPath = buttonIndexPath
-	super.init(frame: .zero)
-  }
-  required init?(coder aDecoder: NSCoder) {
-	fatalError("init(coder:) has not been implemented")
-  }
 }

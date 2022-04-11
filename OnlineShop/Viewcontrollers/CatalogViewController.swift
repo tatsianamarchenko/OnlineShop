@@ -11,16 +11,17 @@ import Firebase
 
 class CatalogViewController: UIViewController {
 
-	var filtered = [Flower]()
-	var searchActive : Bool = false
-static var flowers = [Flower]()
-	var firebaseManager = FirebaseManager()
-	var sort: String?
+	static var flowers = [Flower]()
+
+	private var filtered = [Flower]()
+	private var searchActive : Bool = false
+	private var firebaseManager = FirebaseManager()
+	private var sort: String?
 
 	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
 																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
 
-	var scView: UIScrollView = {
+	private lazy var scView: UIScrollView = {
 		var scView = UIScrollView(frame:.zero)
 		scView.translatesAutoresizingMaskIntoConstraints = false
 		scView.showsVerticalScrollIndicator = false
@@ -28,7 +29,7 @@ static var flowers = [Flower]()
 		return scView
 	}()
 
-	var search: UISearchBar = {
+	private lazy var search: UISearchBar = {
 		var search = UISearchBar()
 		search.placeholder = "Find your plant"
 		search.translatesAutoresizingMaskIntoConstraints = false
@@ -77,7 +78,7 @@ static var flowers = [Flower]()
 		loadInfo(sort: sort)
 	}
 
-	func loadInfo(sort: String?) {
+	private func loadInfo(sort: String?) {
 		CatalogViewController.flowers.removeAll()
 		firebaseManager.fetchMain(document: "Flowers") { flower in
 			if self.sort == nil {
@@ -117,7 +118,7 @@ static var flowers = [Flower]()
 		}
 	}
 
-	func createSortingButtons() {
+	private func createSortingButtons() {
 		let buttonPadding:CGFloat = 10
 		var xOffset:CGFloat = 10
 		let buttonNameArray = ["All", "Living room", "Bathroom", "Bedroom", "Kitchen"]
@@ -137,7 +138,7 @@ static var flowers = [Flower]()
 		}
 	}
 
-	@objc func btnTouch(_ button: UIButton) {
+	@objc private func btnTouch(_ button: UIButton) {
 		activityIndicatorView.startAnimating()
 		CatalogViewController.flowers.removeAll()
 		firebaseManager.fetchMain(document: "Flowers") { flower in
@@ -175,7 +176,7 @@ static var flowers = [Flower]()
 		}
 	}
 
-	func makeConstants() {
+	private func makeConstants() {
 
 		NSLayoutConstraint.activate([
 			search.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -299,7 +300,8 @@ extension CatalogViewController: UISearchBarDelegate {
 			itemsCollection.reloadData()
 		} else {
 			filtered = CatalogViewController.flowers.filter({ (item) -> Bool in
-				return (item.title.localizedCaseInsensitiveContains(String(searchBar.text!)))
+				let text = searchBar.text ?? ""
+				return (item.title.localizedCaseInsensitiveContains(text))
 			})
 			itemsCollection.reloadData()
 		}

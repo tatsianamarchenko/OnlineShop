@@ -6,11 +6,11 @@
 //
 
 import UIKit
-import Alamofire
+import NVActivityIndicatorView
 
 class FavoriteViewController: UIViewController {
 
-	var flowers = [Flower]()
+	private var flowers = [Flower]()
 
 	private lazy var itemsCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
@@ -24,15 +24,31 @@ class FavoriteViewController: UIViewController {
 		return collection
 	}()
 
+	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
+																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.addSubview(itemsCollection)
+		view.addSubview(activityIndicatorView)
 		itemsCollection.dataSource = self
 		itemsCollection.delegate = self
 		makeConstraints()
 	}
 
-	func makeConstraints() {
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		activityIndicatorView.startAnimating()
+		tabBarController?.tabBar.isHidden = false
+		self.flowers.removeAll()
+		FirebaseManager.shered.fetchCartItem(collection: "users", field: "favorite") { flower in
+			self.flowers.append(flower)
+			self.itemsCollection.reloadData()
+			self.activityIndicatorView.stopAnimating()
+		}
+	}
+
+	private func makeConstraints() {
 		NSLayoutConstraint.activate([
 			itemsCollection.topAnchor.constraint(equalTo: view.topAnchor),
 			itemsCollection.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -41,18 +57,7 @@ class FavoriteViewController: UIViewController {
 		])
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		tabBarController?.tabBar.isHidden = false
-		self.flowers.removeAll()
-		var totalPrice = Double(0)
-		FirebaseManager.shered.fetchCartItem(collection: "users", field: "favorite") { flower in
-			self.flowers.append(flower)
-			self.itemsCollection.reloadData()
-		}
-	}
-
-	@objc func deliteFromFavorite(_ sender: IndexedButton) {
+	 @objc private func deliteFromFavorite(_ sender: IndexedButton) {
 		print(sender.buttonIndexPath.row)
 		FirebaseManager.shered.deliteFromFavorite(flower: flowers[sender.buttonIndexPath.row]) { flower in
 			self.flowers.removeAll {
@@ -61,11 +66,9 @@ class FavoriteViewController: UIViewController {
 			self.itemsCollection.reloadData()
 		}
 	}
-
 }
 
-
-	extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
 		func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 			return self.flowers.count
@@ -119,7 +122,12 @@ class FavoriteViewController: UIViewController {
 		}
 
 		func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-			let vc = SingleItemViewController(flower: nil, flowerArray: nil)
+			let flower = self.flowers[indexPath.row]
+			var new = CatalogViewController.flowers
+			new.removeAll {
+				$0.type != flower.type
+			}
+			let vc = SingleItemViewController(flower: flowers[indexPath.row], flowerArray: nil)
 			navigationController?.pushViewController(vc, animated: true)
 		}
 	}

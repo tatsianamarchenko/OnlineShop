@@ -65,11 +65,7 @@ class NewAccountViewController: UIViewController {
 		accountImageView.addGestureRecognizer(gesture)
 	}
 
-	@objc func profileImage() {
-		presentPhoto()
-	}
-
-	func makeConstraints() {
+	private func makeConstraints() {
 		NSLayoutConstraint.activate([
 			accountImageView.widthAnchor.constraint(equalToConstant: view.frame.width/4),
 			accountImageView.heightAnchor.constraint(equalToConstant: 100),
@@ -112,7 +108,11 @@ class NewAccountViewController: UIViewController {
 		accountImageView.layer.cornerRadius = 10
 	}
 
-	@objc func registrationFinishButtonTapped() {
+	@objc private func profileImage() {
+		presentPhoto()
+	}
+
+	@objc private func registrationFinishButtonTapped() {
 
 		emailTextField.resignFirstResponder()
 		passwardTextField.resignFirstResponder()
@@ -143,33 +143,10 @@ class NewAccountViewController: UIViewController {
 		self.present(vc, animated: true)
 	}
 
-	func alertUserLoginError(string message: String) {
+	private func alertUserLoginError(string message: String) {
 		let alert = UIAlertController(title: "error", message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
 		present(alert, animated: true)
-	}
-}
-
-extension UITextField {
-	func createCustomTextField(title: String) -> UITextField {
-		let textField = UITextField()
-		textField.keyboardType = .default
-		textField.autocapitalizationType = .none
-		textField.autocorrectionType = .no
-		textField.placeholder = NSLocalizedString(title, comment: "")
-		textField.translatesAutoresizingMaskIntoConstraints = false
-		textField.font = UIFont.systemFont(ofSize: 20)
-		textField.textAlignment = .left
-		textField.textColor = Constants().greenColor
-		textField.clearButtonMode = .whileEditing
-		textField.borderStyle = .roundedRect
-		textField.layer.borderWidth = 0
-		textField.layer.shadowColor = UIColor.systemGray.cgColor
-		textField.layer.shadowOffset = CGSize(width: 0, height: 0)
-		textField.layer.shadowRadius = 8
-		textField.layer.shadowOpacity = 0.5
-		textField.layer.masksToBounds = false
-		return textField
 	}
 }
 

@@ -9,11 +9,11 @@ import UIKit
 import AVKit
 
 class InViewController: UIViewController {
-	var player: AVPlayer?
-	var playerLayer: AVPlayerLayer?
-	var  createAccountButton = UIButton().createCustomButton(title: "create account")
+	private var player: AVPlayer?
+	private var playerLayer: AVPlayerLayer?
+	private lazy var  createAccountButton = UIButton().createCustomButton(title: "create account")
 
-	var  enterButton = UIButton().createCustomButton(title: "log in")
+	private lazy var  enterButton = UIButton().createCustomButton(title: "log in")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,11 +38,19 @@ class InViewController: UIViewController {
 		player = AVPlayer(playerItem: item) 
 		playerLayer = AVPlayerLayer(player: player)
 		playerLayer?.frame = CGRect(x: -30, y: 0, width: self.view.frame.size.width*1.3, height: self.view.frame.size.height)
-		view.layer.insertSublayer(playerLayer!, at: 0)
-		player?.playImmediately(atRate: 0.3)
+		guard let player = player else {
+			return
+		}
+
+		guard let playerLayer = playerLayer else {
+			return
+		}
+
+		view.layer.insertSublayer(playerLayer, at: 0)
+		player.playImmediately(atRate: 0.3)
 	}
 
-	@objc func tapped(_ button: UIButton) {
+	@objc private func tapped(_ button: UIButton) {
 		if button.accessibilityIdentifier == "create account" {
 			let vc = NewAccountViewController()
 			present(vc, animated: true)
@@ -52,7 +60,7 @@ class InViewController: UIViewController {
 		}
 	}
 
-	func makeConstraints() {
+	private func makeConstraints() {
 		NSLayoutConstraint.activate([
 		createAccountButton.bottomAnchor.constraint(equalTo: enterButton.topAnchor, constant: -10),
 		createAccountButton.heightAnchor.constraint(equalToConstant: 50),
@@ -64,19 +72,5 @@ class InViewController: UIViewController {
 		enterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 		enterButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
 		])
-	}
-}
-
-extension UIButton {
-	func createCustomButton(title: String) -> IndexedButton {
-		let button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
-		button.setTitle(title, for: .normal)
-		button.setTitleColor(Constants().greenColor, for: .selected)
-		button.titleLabel?.textAlignment = .center
-		button.accessibilityIdentifier = title
-		button.backgroundColor = Constants().greenColor
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.layer.cornerRadius = 10
-		return button
 	}
 }

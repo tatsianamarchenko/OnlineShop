@@ -12,7 +12,7 @@ import Firebase
 class FavoriteCollectionViewCell: UICollectionViewCell {
 
 	static let identifier = "FavoriteCollectionViewCell"
-	var flower: Flower?
+	private var flower: Flower?
 	private lazy var nameLabel: UILabel = {
 		var lable = UILabel()
 		lable.textColor = Constants().darkGreyColor
@@ -41,7 +41,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 	
-	var  addToCartButton = UIButton().createCustomButton(title: "$0")
+	private lazy var  addToCartButton = UIButton().createCustomButton(title: "$0")
 
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
@@ -67,20 +67,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		return stepper
 	}()
 
-	func config(model: Flower, indexPath: IndexPath) {
-		nameLabel.text = model.title
-		typeLable.text = model.type
-		descriptionLable.text = model.description
-		addToCartButton.setTitle(model.price, for: .normal)
-		photoOfProduct.image = model.image?.getImage()
-		flower = model
-		addToCartButton.buttonIndexPath = indexPath
-		removeButton.buttonIndexPath = indexPath
-		addToCartButton.addTarget(self, action: #selector(toCart), for: .touchUpInside)
-	}
-
-
-	var photoOfProduct: UIImageView = {
+	private lazy var photoOfProduct: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
@@ -102,8 +89,27 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		makeConstants()
 	}
 
-	@objc func toCart(_ sender: IndexedButton) {
-		FirebaseManager.shered.addToCart(flower: self.flower!) { (result: Result<Void, Error>) in
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		nameLabel.text = nil
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		photoOfProduct.layer.cornerRadius = 10
+		photoOfProduct.clipsToBounds = true
+	}
+
+	@objc private func toCart(_ sender: IndexedButton) {
+		guard let flower = self.flower else {
+			return
+		}
+
+		FirebaseManager.shered.addToCart(flower: flower) { (result: Result<Void, Error>) in
 			switch result {
 			case .success():
 				self.createAlert(string: "Added to cart")
@@ -113,7 +119,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		}
 	}
 
-	func createAlert(string: String) {
+	private func createAlert(string: String) {
 		let alert = UIAlertController(title: "Added", message: string, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
 		if let vc = self.next(ofType: UIViewController.self) {
@@ -121,14 +127,19 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		}
 	}
 
-
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		photoOfProduct.layer.cornerRadius = 10
-		photoOfProduct.clipsToBounds = true
+	func config(model: Flower, indexPath: IndexPath) {
+		nameLabel.text = model.title
+		typeLable.text = model.type
+		descriptionLable.text = model.description
+		addToCartButton.setTitle(model.price, for: .normal)
+		photoOfProduct.image = model.image?.getImage()
+		flower = model
+		addToCartButton.buttonIndexPath = indexPath
+		removeButton.buttonIndexPath = indexPath
+		addToCartButton.addTarget(self, action: #selector(toCart), for: .touchUpInside)
 	}
 
-	func makeConstants() {
+	private func makeConstants() {
 		NSLayoutConstraint.activate([
 			photoOfProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
 			photoOfProduct.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -160,26 +171,5 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 			removeButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
 			removeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
 		])
-	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		nameLabel.text = nil
-	}
-
-}
-
-extension UIResponder {
-	func next<T:UIResponder>(ofType: T.Type) -> T? {
-		let r = self.next
-		if let r = r as? T ?? r?.next(ofType: T.self) {
-			return r
-		} else {
-			return nil
-		}
 	}
 }

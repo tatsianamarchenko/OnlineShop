@@ -50,15 +50,6 @@ class CartCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 
-	func config(model: Flower?, indexPath: IndexPath) {
-		nameLabel.text = model?.title
-		typeLable.text = model?.type
-		priceLable.text = model?.price
-		descriptionLable.text = model?.description
-		photoOfProduct.image = model?.image?.getImage()
-		removeButton.buttonIndexPath = indexPath
-	}
-
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
@@ -83,7 +74,6 @@ class CartCollectionViewCell: UICollectionViewCell {
 		return stepper
 	}()
 
-
 	private lazy var photoOfProduct: UIImageView = {
 		var image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -106,13 +96,31 @@ class CartCollectionViewCell: UICollectionViewCell {
 		makeConstants()
 	}
 
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		nameLabel.text = nil
+	}
+
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		photoOfProduct.layer.cornerRadius = 10
 		photoOfProduct.clipsToBounds = true
 	}
 
-	func makeConstants() {
+	func config(model: Flower?, indexPath: IndexPath) {
+		nameLabel.text = model?.title
+		typeLable.text = model?.type
+		priceLable.text = model?.price
+		descriptionLable.text = model?.description
+		photoOfProduct.image = model?.image?.getImage()
+		removeButton.buttonIndexPath = indexPath
+	}
+
+	private func makeConstants() {
 		NSLayoutConstraint.activate([
 			photoOfProduct.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
 			photoOfProduct.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -145,14 +153,4 @@ class CartCollectionViewCell: UICollectionViewCell {
 			removeButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
 		])
 	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		nameLabel.text = nil
-	}
-	
 }

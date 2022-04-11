@@ -11,9 +11,9 @@ import ReadMoreTextView
 import Firebase
 
 class SingleItemViewController: UIViewController {
-	var fav = false
-	var flower: Flower?
-	var flowerArray: [Flower]?
+	private var fav = false
+	private var flower: Flower?
+	private var flowerArray: [Flower]?
 
 	private lazy var productImageView: UIImageView = {
 		var image = UIImageView()
@@ -24,22 +24,12 @@ class SingleItemViewController: UIViewController {
 		return image
 	}()
 
-	init(flower: Flower?, flowerArray: [Flower]?) {
-		self.flower = flower
-		self.flowerArray = flowerArray
-		super.init(nibName: nil, bundle: nil)
-	}
-
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
 	private lazy var flowerView: UIView = {
 		var view = UIView()
 		return view
 	}()
 
-	var addToCartButton = UIButton().createCustomButton(title: "add to cart")
+	private var addToCartButton = UIButton().createCustomButton(title: "add to cart")
 
 	private lazy var stepper: GMStepper = {
 		var stepper = GMStepper()
@@ -58,25 +48,6 @@ class SingleItemViewController: UIViewController {
 		return stepper
 	}()
 
-	func createBacicInformationImage (string: String) -> UIImageView {
-		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(Constants().greyColor, renderingMode: .alwaysOriginal))
-		image.backgroundColor = Constants().whiteColor
-		image.layer.cornerRadius = 3
-		image.translatesAutoresizingMaskIntoConstraints = false
-		image.clipsToBounds = true
-		image.contentMode = .center
-		return image
-	}
-
-	func createBacicInformationLable(string: String) -> UILabel {
-		let lable = UILabel()
-		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.text = string
-		lable.textColor = Constants().greyColor
-		lable.contentMode = .center
-		return lable
-	}
-
 	private lazy  var priceLabel: UILabel = {
 		var title = UILabel()
 		title.translatesAutoresizingMaskIntoConstraints = false
@@ -85,20 +56,6 @@ class SingleItemViewController: UIViewController {
 		title.textColor = Constants().greenColor
 		return title
 	}()
-
-	func createIteminfoStack(title: String, info: String) -> UIStackView {
-		let titleLable = UILabel()
-		titleLable.text = title
-		titleLable.textColor = Constants().greyColor
-		let infoLable = UILabel()
-		infoLable.text = info
-		infoLable.textColor = Constants().darkGreyColor
-		let stack = UIStackView(arrangedSubviews: [titleLable, infoLable])
-		stack.translatesAutoresizingMaskIntoConstraints = false
-		stack.axis = .vertical
-		stack.alignment = .leading
-		return stack
-	}
 
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
@@ -137,6 +94,16 @@ class SingleItemViewController: UIViewController {
 		collection.clipsToBounds = true
 		return collection
 	}()
+
+	init(flower: Flower?, flowerArray: [Flower]?) {
+		self.flower = flower
+		self.flowerArray = flowerArray
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -241,8 +208,12 @@ class SingleItemViewController: UIViewController {
 		addToCartButton.addTarget(self, action: #selector(toCart), for: .touchUpInside)
 	}
 
-	@objc func toCart() {
-		FirebaseManager.shered.addToCart(flower: self.flower!) { (result: Result<Void, Error>) in
+	@objc private func toCart() {
+		guard let flower = self.flower else {
+			return
+		}
+
+		FirebaseManager.shered.addToCart(flower: flower) { (result: Result<Void, Error>) in
 			switch result {
 			case .success():
 				self.createAlert(string: "Added to cart")
@@ -252,13 +223,46 @@ class SingleItemViewController: UIViewController {
 		}
 	}
 	
-	func createAlert(string: String) {
+	private func createAlert(string: String) {
 		let alert = UIAlertController(title: "Added", message: string, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
 		present(alert, animated: true)
 	}
 
-	func createBar() {
+	private func createIteminfoStack(title: String, info: String) -> UIStackView {
+		let titleLable = UILabel()
+		titleLable.text = title
+		titleLable.textColor = Constants().greyColor
+		let infoLable = UILabel()
+		infoLable.text = info
+		infoLable.textColor = Constants().darkGreyColor
+		let stack = UIStackView(arrangedSubviews: [titleLable, infoLable])
+		stack.translatesAutoresizingMaskIntoConstraints = false
+		stack.axis = .vertical
+		stack.alignment = .leading
+		return stack
+	}
+
+	private func createBacicInformationImage (string: String) -> UIImageView {
+		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(Constants().greyColor, renderingMode: .alwaysOriginal))
+		image.backgroundColor = Constants().whiteColor
+		image.layer.cornerRadius = 3
+		image.translatesAutoresizingMaskIntoConstraints = false
+		image.clipsToBounds = true
+		image.contentMode = .center
+		return image
+	}
+
+	private func createBacicInformationLable(string: String) -> UILabel {
+		let lable = UILabel()
+		lable.translatesAutoresizingMaskIntoConstraints = false
+		lable.text = string
+		lable.textColor = Constants().greyColor
+		lable.contentMode = .center
+		return lable
+	}
+
+	private func createBar() {
 		title = flower?.title
 		tabBarController?.tabBar.isHidden = true
 		let saveImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
@@ -273,7 +277,7 @@ class SingleItemViewController: UIViewController {
 		navigationItem.rightBarButtonItem = button
 	}
 
-	@objc func addToFavorte(_ sender: UIBarButtonItem) {
+	@objc private func addToFavorte(_ sender: UIBarButtonItem) {
 		fav.toggle()
 		let unfavImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		guard let unfavImage = unfavImage else {
@@ -285,7 +289,11 @@ class SingleItemViewController: UIViewController {
 		}
 		if fav == true {
 			sender.image = favImage
-			FirebaseManager.shered.addToFavorite(flower: self.flower!) { (result: Result<Void, Error>) in
+			guard let flower = self.flower else {
+				return
+			}
+
+			FirebaseManager.shered.addToFavorite(flower: flower) { (result: Result<Void, Error>) in
 				switch result {
 				case .success():
 					self.createAlert(string: "Added to favorite")
@@ -298,22 +306,6 @@ class SingleItemViewController: UIViewController {
 			sender.image = unfavImage
 		}
 	}
-}
-
-extension UIView {
-
-	static func spacer(size: CGFloat = 3, for layout: NSLayoutConstraint.Axis = .horizontal) -> UIView {
-		let spacer = UIView()
-
-		if layout == .horizontal {
-			spacer.widthAnchor.constraint(equalToConstant: size).isActive = true
-		} else {
-			spacer.heightAnchor.constraint(equalToConstant: size).isActive = true
-		}
-
-		return spacer
-	}
-
 }
 
 extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

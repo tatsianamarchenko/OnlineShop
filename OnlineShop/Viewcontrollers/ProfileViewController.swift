@@ -10,8 +10,8 @@ import FirebaseAuth
 
 class ProfileViewController: UIViewController {
 
-	var  chatButton = UIButton().createCustomButton(title: "chat") 
-	var  phoneButton: UIButton = {
+	private lazy var  chatButton = UIButton().createCustomButton(title: "chat")
+	private lazy var  phoneButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Phone", for: .normal)
 		button.setTitleColor(Constants().greenColor, for: .normal)
@@ -114,7 +114,7 @@ class ProfileViewController: UIViewController {
 		return title
 	}()
 
-	var photoOfProfile: UIImageView = {
+	private lazy var photoOfProfile: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(named: "lol")
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -122,7 +122,7 @@ class ProfileViewController: UIViewController {
 		return image
 	}()
 
-	var contactsImage: UIImageView = {
+	private lazy var contactsImage: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(systemName: "headphones")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -130,7 +130,7 @@ class ProfileViewController: UIViewController {
 		return image
 	}()
 
-	var deliveryImage: UIImageView = {
+	private lazy var deliveryImage: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(systemName: "list.dash.header.rectangle")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -148,7 +148,7 @@ class ProfileViewController: UIViewController {
 		return lable
 	}()
 
-	var  actualButton: UIButton = {
+	private lazy var  actualButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Active", for: .normal)
 		button.titleLabel?.textAlignment = .center
@@ -157,7 +157,7 @@ class ProfileViewController: UIViewController {
 		return button
 	}()
 
-	var  historyButton: UIButton = {
+	private lazy var  historyButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("History", for: .normal)
 		button.titleLabel?.textAlignment = .center
@@ -196,7 +196,7 @@ class ProfileViewController: UIViewController {
 		return title
 	}()
 
-	var visaOrmastercardImage: UIImageView = {
+	private lazy var visaOrmastercardImage: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(named: "lol")
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -204,7 +204,7 @@ class ProfileViewController: UIViewController {
 		return image
 	}()
 
-	var envelopeImage: UIImageView = {
+	private lazy var envelopeImage: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(systemName: "envelope")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -232,7 +232,7 @@ class ProfileViewController: UIViewController {
 		return lable
 	}()
 
-	var phoneImage: UIImageView = {
+	private lazy var phoneImage: UIImageView = {
 		var image = UIImageView()
 		image.image = UIImage(systemName: "iphone.smartbatterycase.gen2")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
@@ -260,10 +260,10 @@ class ProfileViewController: UIViewController {
 		return lable
 	}()
 
-	let contactsView = UIView().createCustomView()
-	let orderView = UIView().createCustomView()
-	let cardView = UIView().createCustomView()
-	let profileContactsView = UIView().createCustomView()
+	private lazy var contactsView = UIView().createCustomView()
+	private lazy var orderView = UIView().createCustomView()
+	private lazy var cardView = UIView().createCustomView()
+	private lazy var profileContactsView = UIView().createCustomView()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -452,18 +452,18 @@ class ProfileViewController: UIViewController {
 		config()
 	}
 
-	func config() {
-		guard let user = Auth.auth().currentUser else {return}
-		namelLabel.text = user.email
-	}
-
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		photoOfProfile.layer.cornerRadius = 10
 		photoOfProfile.clipsToBounds = true
 	}
 
-	func createBarButton() {
+	private func config() {
+		guard let user = Auth.auth().currentUser else {return}
+		namelLabel.text = user.email
+	}
+
+	private func createBarButton() {
 	  let saveImage = UIImage(systemName: "person.crop.circle.badge.minus")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
 	  guard let saveImage = saveImage else {
 		return
@@ -476,10 +476,11 @@ class ProfileViewController: UIViewController {
 	  navigationItem.rightBarButtonItem = button
 	}
 
-	@objc func reset() {
+	@objc private func reset() {
 		FirebaseManager.shered.signOut { (result: Result<Void, Error>) in
 			switch result {
-			case .success(let success):
+			case .success(_):
+				UserDefaults.standard.removeObject(forKey: Constants().userKey)
 				let vc = InViewController()
 				vc.modalPresentationStyle = .fullScreen
 				self.present(vc, animated: true)
@@ -489,7 +490,7 @@ class ProfileViewController: UIViewController {
 		}
 	}
 
-	func alertUserLoginError(string message: String) {
+	private func alertUserLoginError(string message: String) {
 		let alert = UIAlertController(title: "error", message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
 		present(alert, animated: true)

@@ -46,7 +46,7 @@ class EnterViewController: UIViewController {
 		makeConstraints()
 	}
 
-	func makeConstraints() {
+	private func makeConstraints() {
 		NSLayoutConstraint.activate([
 			accountImageView.widthAnchor.constraint(equalToConstant: view.frame.width/4),
 			accountImageView.heightAnchor.constraint(equalToConstant: 100),
@@ -68,7 +68,12 @@ class EnterViewController: UIViewController {
 		])
 	}
 
-	@objc func enterButtonTapped() {
+	override func viewDidLayoutSubviews() {
+	  super.viewDidLayoutSubviews()
+		accountImageView.layer.cornerRadius = 10
+	}
+
+	@objc private func enterButtonTapped() {
 
 		emailTextField.resignFirstResponder()
 		passwardTextField.resignFirstResponder()
@@ -96,17 +101,11 @@ class EnterViewController: UIViewController {
 		self.present(vc, animated: true)
 	}
 
-	func alertUserLoginError(string message: String) {
+	private func alertUserLoginError(string message: String) {
 		let alert = UIAlertController(title: "error", message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
 		present(alert, animated: true)
 	}
-
-	override func viewDidLayoutSubviews() {
-	  super.viewDidLayoutSubviews()
-		accountImageView.layer.cornerRadius = 10
-	}
-
 }
 
 extension EnterViewController : UITextFieldDelegate {

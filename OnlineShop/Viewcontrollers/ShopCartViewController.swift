@@ -6,11 +6,10 @@
 //
 
 import UIKit
-import Alamofire
-import Firebase
+import NVActivityIndicatorView
 
 class ShopCartViewController: UIViewController {
-var flowers = [Flower]()
+	private var flowers = [Flower]()
 	private lazy var itemsCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .vertical
@@ -23,7 +22,10 @@ var flowers = [Flower]()
 		return collection
 	}()
 
-	var  payCartButton = UIButton().createCustomButton(title: "Buy")
+	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
+																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
+
+	private var  payCartButton = UIButton().createCustomButton(title: "Buy")
 
 	private lazy  var totalLabel: UILabel = {
 		var title = UILabel()
@@ -46,17 +48,35 @@ var flowers = [Flower]()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
 		view.addSubview(itemsCollection)
 		view.addSubview(payCartButton)
 		view.addSubview(totalLabel)
 		view.addSubview(priceLabel)
+		view.addSubview(activityIndicatorView)
 		itemsCollection.dataSource = self
 		itemsCollection.delegate = self
 		makeConstraints()
 	}
 
-	func makeConstraints() {
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		activityIndicatorView.startAnimating()
+		tabBarController?.tabBar.isHidden = false
+		self.flowers.removeAll()
+		var totalPrice = Double(0)
+		FirebaseManager.shered.fetchCartItem(collection: "users", field: "cart") { flower in
+			self.flowers.append(flower)
+			self.itemsCollection.reloadData()
+			for flower in self.flowers {
+				let a = Double(flower.price)
+				totalPrice += Double(round(a ?? 0))
+				self.priceLabel.text = String(totalPrice)
+			}
+			self.activityIndicatorView.stopAnimating()
+		}
+	}
+
+	private func makeConstraints() {
 		NSLayoutConstraint.activate([
 			itemsCollection.topAnchor.constraint(equalTo: view.topAnchor),
 			itemsCollection.bottomAnchor.constraint(equalTo: totalLabel.topAnchor),
@@ -78,24 +98,7 @@ var flowers = [Flower]()
 		])
 	}
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		tabBarController?.tabBar.isHidden = false
-		self.flowers.removeAll()
-		var totalPrice = Double(0)
-		FirebaseManager.shered.fetchCartItem(collection: "users", field: "cart") { flower in
-			self.flowers.append(flower)
-			self.itemsCollection.reloadData()
-			for flower in self.flowers {
-				let a = Double(flower.price)
-				totalPrice += Double(round(a ?? 0))
-				self.priceLabel.text = String(totalPrice)
-			}
-		}
-	}
-
-
-	@objc func deliteFromCart(_ sender: IndexedButton) {
+	@objc private func deliteFromCart(_ sender: IndexedButton) {
 		print(sender.buttonIndexPath.row)
 		FirebaseManager.shered.deliteFromCart(flower: flowers[sender.buttonIndexPath.row]) { flower in
 			self.flowers.removeAll {
@@ -106,7 +109,6 @@ var flowers = [Flower]()
 	}
 
 }
-
 
 extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 

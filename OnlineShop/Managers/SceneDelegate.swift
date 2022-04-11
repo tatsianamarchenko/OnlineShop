@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	  }
 	  window = UIWindow(frame: UIScreen.main.bounds)
 
-		if let name = UserDefaults.standard.string(forKey: "user") {
+		if let name = UserDefaults.standard.string(forKey: Constants().userKey) {
 			print(name)
 			let home = MainTabBarController()
 			self.window?.rootViewController = home

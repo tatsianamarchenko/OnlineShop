@@ -13,6 +13,10 @@ struct Constants {
 	let whiteColor = #colorLiteral(red: 0.9561443925, green: 0.9607489705, blue: 0.9694833159, alpha: 1)
 	let greyColor = #colorLiteral(red: 0.5058823824, green: 0.5058823824, blue: 0.5058823824, alpha: 1)
 	let darkGreyColor = #colorLiteral(red: 0.2518119514, green: 0.2468957603, blue: 0.2469815612, alpha: 1)
+
 	let imageSize = (UIScreen.main.bounds.height/7)-20
 	let imageSizeCornerRadius: CGFloat = (UIScreen.main.bounds.height/7)-20/2
+
+	let userKey = "user"
+	let validationPredicate = "^(?=.*[a-z])(?=.*[$@$#!%*?&])[A-Za-z\\d$@$#!%*?&]{8,}"
 }
