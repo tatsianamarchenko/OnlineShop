@@ -46,8 +46,18 @@ class FavoriteViewController: UIViewController {
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
 		var totalPrice = Double(0)
-		FirebaseManager().fetchCartItem(collection: "users", field: "favorite") { flower in
+		FirebaseManager.shered.fetchCartItem(collection: "users", field: "favorite") { flower in
 			self.flowers.append(flower)
+			self.itemsCollection.reloadData()
+		}
+	}
+
+	@objc func deliteFromFavorite(_ sender: IndexedButton) {
+		print(sender.buttonIndexPath.row)
+		FirebaseManager.shered.deliteFromFavorite(flower: flowers[sender.buttonIndexPath.row]) { flower in
+			self.flowers.removeAll {
+				$0.id == flower.id
+			}
 			self.itemsCollection.reloadData()
 		}
 	}
@@ -72,7 +82,9 @@ class FavoriteViewController: UIViewController {
 					as? FavoriteCollectionViewCell else {
 						return UICollectionViewCell()
 					}
-			cell.config(model: flowers[indexPath.row])
+			cell.config(model: flowers[indexPath.row], indexPath: indexPath)
+			cell.removeButton.addTarget(self, action: #selector(deliteFromFavorite), for: .touchUpInside
+			)
 			cell.layer.cornerRadius = 20
 			cell.layer.borderWidth = 0
 			cell.layer.shadowColor = UIColor.systemGray.cgColor

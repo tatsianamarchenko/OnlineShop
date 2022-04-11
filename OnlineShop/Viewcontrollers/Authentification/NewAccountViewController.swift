@@ -131,11 +131,11 @@ class NewAccountViewController: UIViewController {
 				  self.alertUserLoginError(string: "enter all information to create a new account")
 				  return
 			  }
-		if DataBaseManager().isPasswardValid(passward) == false {
+		if FirebaseManager.shered.isPasswardValid(passward) == false {
 			self.alertUserLoginError(string: "please make sure passward is secure enought")
 		}
-		let user = DataBaseManager.AppUser(fullName: fullName, phone: phone, adress: adress, zip: zip, email: email, passward: passward)
-		DataBaseManager().insertUser(with: user) { error in
+		let user = FirebaseManager.AppUser(fullName: fullName, phone: phone, adress: adress, zip: zip, email: email, passward: passward)
+		FirebaseManager.shered.insertUser(with: user) { error in
 				self.alertUserLoginError(string: error.localizedDescription)
 		}
 		let vc = MainTabBarController()
@@ -222,7 +222,7 @@ extension NewAccountViewController : UITextFieldDelegate {
 			textField.resignFirstResponder()
 			passwardTextField.becomeFirstResponder()
 		} else if textField == passwardTextField {
-			if DataBaseManager().isPasswardValid((passwardTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "") == false {
+			if FirebaseManager.shered.isPasswardValid((passwardTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "") == false {
 				// passward isn't secure enought
 				self.alertUserLoginError(string: "please make sure passward is secure enought")
 			}

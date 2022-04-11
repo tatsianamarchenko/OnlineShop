@@ -83,7 +83,7 @@ var flowers = [Flower]()
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
 		var totalPrice = Double(0)
-		FirebaseManager().fetchCartItem(collection: "users", field: "cart") { flower in
+		FirebaseManager.shered.fetchCartItem(collection: "users", field: "cart") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			for flower in self.flowers {
@@ -93,6 +93,18 @@ var flowers = [Flower]()
 			}
 		}
 	}
+
+
+	@objc func deliteFromCart(_ sender: IndexedButton) {
+		print(sender.buttonIndexPath.row)
+		FirebaseManager.shered.deliteFromCart(flower: flowers[sender.buttonIndexPath.row]) { flower in
+			self.flowers.removeAll {
+				$0.id == flower.id
+			}
+			self.itemsCollection.reloadData()
+		}
+	}
+
 }
 
 
@@ -113,7 +125,8 @@ extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewData
 				as? CartCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-		cell.config(model: flowers[indexPath.row])
+		cell.config(model: flowers[indexPath.row], indexPath: indexPath)
+		cell.removeButton.addTarget(self, action: #selector(deliteFromCart), for: .touchUpInside)
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0
 		cell.layer.shadowColor = UIColor.systemGray.cgColor

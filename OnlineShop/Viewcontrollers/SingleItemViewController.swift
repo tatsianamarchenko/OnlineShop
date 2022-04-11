@@ -242,23 +242,16 @@ class SingleItemViewController: UIViewController {
 	}
 
 	@objc func toCart() {
-		let db = Firestore.firestore()
-		guard let user = Auth.auth().currentUser?.email else {return}
-		var collection = db.collection("users").document(user)
-		collection.getDocument { documentSnapshot, error in
-			var cart = documentSnapshot?["cart"] as? [String]
-			cart?.append(self.flower!.id)
-			collection.updateData(["cart": cart]) { error in
-				if error != nil {
-					self.createAlert(string: error?.localizedDescription ?? "")
-				} else {
-					self.createAlert(string: "Added to cart")
-				}
-
+		FirebaseManager.shered.addToCart(flower: self.flower!) { (result: Result<Void, Error>) in
+			switch result {
+			case .success():
+				self.createAlert(string: "Added to cart")
+			case .failure(let error):
+				self.createAlert(string: error.localizedDescription)
 			}
 		}
 	}
-
+	
 	func createAlert(string: String) {
 		let alert = UIAlertController(title: "Added", message: string, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
@@ -291,10 +284,18 @@ class SingleItemViewController: UIViewController {
 			return
 		}
 		if fav == true {
-			sender.image = unfavImage
+			sender.image = favImage
+			FirebaseManager.shered.addToFavorite(flower: self.flower!) { (result: Result<Void, Error>) in
+				switch result {
+				case .success():
+					self.createAlert(string: "Added to favorite")
+				case .failure(let error):
+					self.createAlert(string: error.localizedDescription)
+				}
+			}
 
 		} else {
-			sender.image = favImage
+			sender.image = unfavImage
 		}
 	}
 }
@@ -332,7 +333,6 @@ extension SingleItemViewController: UICollectionViewDelegate, UICollectionViewDa
 				as? ShopCollectionViewCell else {
 					return UICollectionViewCell()
 				}
-	//	cell.photoOfProduct.layer.cornerRadius = 10
 		cell.config(madel: (flowerArray?[indexPath.row])!, indexPath: indexPath)
 		cell.layer.cornerRadius = 20
 		cell.layer.borderWidth = 0

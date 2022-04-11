@@ -38,7 +38,6 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		 lable.font = .systemFont(ofSize: 15, weight: .regular)
 		 lable.translatesAutoresizingMaskIntoConstraints = false
 		 lable.textColor = Constants().darkGreyColor
-		 lable.text = "For Bathroom"
 		 return lable
 	 }()
 
@@ -68,20 +67,12 @@ class ShopCollectionViewCell: UICollectionViewCell {
 
 
 	@objc func toFavorite(_ sender: IndexedButton) {
-		let index = sender.buttonIndexPath.row
-		let db = Firestore.firestore()
-		guard let user = Auth.auth().currentUser?.email else {return}
-		var collection = db.collection("users").document(user)
-		collection.getDocument { documentSnapshot, error in
-			var favorite = documentSnapshot?["favorite"] as? [String]
-			favorite?.append(CatalogViewController.flowers[sender.buttonIndexPath.row].id)
-			collection.updateData(["favorite": favorite]) { error in
-				if error != nil {
-					self.createAlert(string: error?.localizedDescription ?? "")
-				} else {
-					self.createAlert(string: "Added to favorite")
-				}
-
+		FirebaseManager.shered.addToFavorite(flower: CatalogViewController.flowers[sender.buttonIndexPath.row]) { (result: Result<Void, Error>) in
+			switch result {
+			case .success():
+				self.createAlert(string: "Added to favorite")
+			case .failure(let error):
+				self.createAlert(string: error.localizedDescription)
 			}
 		}
 	}

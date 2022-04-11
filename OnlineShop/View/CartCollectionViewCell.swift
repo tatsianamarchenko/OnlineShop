@@ -7,11 +7,12 @@
 
 import UIKit
 import GMStepper
+import Alamofire
 
 class CartCollectionViewCell: UICollectionViewCell {
 	
 	static let identifier = "CartCollectionViewCell"
-
+	
 	private lazy var nameLabel: UILabel = {
 		var lable = UILabel()
 		lable.textColor = Constants().darkGreyColor
@@ -24,14 +25,14 @@ class CartCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 
-	private lazy var  removeButton: UIButton = {
-		var button = UIButton()
+	var  removeButton: IndexedButton = {
+		var button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
 		button.setImage(UIImage(systemName: "xmark.bin")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
 		button.titleLabel?.textAlignment = .center
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}()
-
+	
 	 private lazy var typeLable : UILabel = {
 		var lable = UILabel()
 		lable.font = .systemFont(ofSize: 15, weight: .regular)
@@ -49,12 +50,13 @@ class CartCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 
-	func config(model: Flower?) {
+	func config(model: Flower?, indexPath: IndexPath) {
 		nameLabel.text = model?.title
 		typeLable.text = model?.type
 		priceLable.text = model?.price
 		descriptionLable.text = model?.description
 		photoOfProduct.image = model?.image?.getImage()
+		removeButton.buttonIndexPath = indexPath
 	}
 
 	private lazy var descriptionLable : UILabel = {

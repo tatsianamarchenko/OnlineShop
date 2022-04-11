@@ -80,7 +80,7 @@ class EnterViewController: UIViewController {
 				  return
 			  }
 
-		DataBaseManager().enterUser(with: email, passward: passward) { (result: Result<AuthDataResult, Error>) in
+		FirebaseManager.shered.enterUser(with: email, passward: passward) { (result: Result<AuthDataResult, Error>) in
 			switch result {
 			case .success(let success):
 				let vc = MainTabBarController()

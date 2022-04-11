@@ -25,8 +25,8 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		return lable
 	}()
 
-	var  removeButton: UIButton = {
-		var button = UIButton()
+	var  removeButton: IndexedButton = {
+		var button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
 		button.setImage(UIImage(systemName: "xmark.bin")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
 		button.titleLabel?.textAlignment = .center
 		button.translatesAutoresizingMaskIntoConstraints = false
@@ -67,13 +67,15 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		return stepper
 	}()
 
-	func config(model: Flower) {
+	func config(model: Flower, indexPath: IndexPath) {
 		nameLabel.text = model.title
 		typeLable.text = model.type
 		descriptionLable.text = model.description
 		addToCartButton.setTitle(model.price, for: .normal)
 		photoOfProduct.image = model.image?.getImage()
 		flower = model
+		addToCartButton.buttonIndexPath = indexPath
+		removeButton.buttonIndexPath = indexPath
 		addToCartButton.addTarget(self, action: #selector(toCart), for: .touchUpInside)
 	}
 
@@ -101,19 +103,12 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 	}
 
 	@objc func toCart(_ sender: IndexedButton) {
-		let db = Firestore.firestore()
-		guard let user = Auth.auth().currentUser?.email else {return}
-		var collection = db.collection("users").document(user)
-		collection.getDocument { documentSnapshot, error in
-			var cart = documentSnapshot?["cart"] as? [String]
-			cart?.append(self.flower!.id)
-			collection.updateData(["cart": cart]) { error in
-				if error != nil {
-					self.createAlert(string: error?.localizedDescription ?? "")
-				} else {
-					self.createAlert(string: "Added to cart")
-				}
-
+		FirebaseManager.shered.addToCart(flower: self.flower!) { (result: Result<Void, Error>) in
+			switch result {
+			case .success():
+				self.createAlert(string: "Added to cart")
+			case .failure(let error):
+				self.createAlert(string: error.localizedDescription)
 			}
 		}
 	}

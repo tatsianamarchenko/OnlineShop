@@ -477,7 +477,7 @@ class ProfileViewController: UIViewController {
 	}
 
 	@objc func reset() {
-		DataBaseManager().signOut { (result: Result<Void, Error>) in
+		FirebaseManager.shered.signOut { (result: Result<Void, Error>) in
 			switch result {
 			case .success(let success):
 				let vc = InViewController()
