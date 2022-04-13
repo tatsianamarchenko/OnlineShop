@@ -6,15 +6,14 @@
 //
 
 import UIKit
-import FirebaseAuth
 
 class EnterViewController: UIViewController {
 
 	private lazy var accountImageView: UIImageView = {
 		let image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
-		image.image = UIImage(systemName: "person")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
-		image.backgroundColor = Constants().whiteColor
+		image.image = UIImage(systemName: "person")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
+		image.backgroundColor = Constants.shered.whiteColor
 		image.clipsToBounds = true
 		image.contentMode = .scaleAspectFill
 		return image
@@ -27,7 +26,7 @@ class EnterViewController: UIViewController {
 		var button = UIButton()
 		button.setTitle("Log in", for: .normal)
 		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().greenColor
+		button.backgroundColor = Constants.shered.greenColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button
@@ -85,9 +84,9 @@ class EnterViewController: UIViewController {
 				  return
 			  }
 
-		FirebaseManager.shered.enterUser(with: email, passward: passward) { (result: Result<AuthDataResult, Error>) in
+		FirebaseAuthManager.shered.enterUser(with: email, passward: passward) { (result: Result<Void, Error>) in
 			switch result {
-			case .success(let success):
+			case .success(_):
 				let vc = MainTabBarController()
 				vc.modalPresentationStyle = .fullScreen
 				self.present(vc, animated: true)

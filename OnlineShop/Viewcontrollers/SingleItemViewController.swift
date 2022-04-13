@@ -8,7 +8,6 @@
 import UIKit
 import GMStepper
 import ReadMoreTextView
-import Firebase
 
 class SingleItemViewController: UIViewController {
 	private var fav = false
@@ -35,14 +34,14 @@ class SingleItemViewController: UIViewController {
 		var stepper = GMStepper()
 		stepper.maximumValue = 100
 		stepper.minimumValue = 1
-		stepper.buttonsTextColor = Constants().greyColor
+		stepper.buttonsTextColor = Constants.shered.greyColor
 
-		stepper.buttonsBackgroundColor = Constants().whiteColor
-		stepper.limitHitAnimationColor = Constants().greyColor
+		stepper.buttonsBackgroundColor = Constants.shered.whiteColor
+		stepper.limitHitAnimationColor = Constants.shered.greyColor
 		stepper.labelBackgroundColor = .systemBackground
-		stepper.labelTextColor = Constants().greyColor
+		stepper.labelTextColor = Constants.shered.greyColor
 
-		stepper.tintColor = Constants().greyColor
+		stepper.tintColor = Constants.shered.greyColor
 		stepper.translatesAutoresizingMaskIntoConstraints = false
 		stepper.stepValue = 1
 		return stepper
@@ -53,14 +52,14 @@ class SingleItemViewController: UIViewController {
 		title.translatesAutoresizingMaskIntoConstraints = false
 		title.text = flower?.price
 		title.font = UIFont.systemFont(ofSize: 30)
-		title.textColor = Constants().greenColor
+		title.textColor = Constants.shered.greenColor
 		return title
 	}()
 
 	private lazy var descriptionLable : UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		lable.text = "Description"
 		return lable
 	}()
@@ -71,7 +70,7 @@ class SingleItemViewController: UIViewController {
 		textView.maximumNumberOfLines = 3
 		textView.readMoreText = " Read more"
 		textView.readLessText = " Read less"
-		textView.textColor = Constants().greyColor
+		textView.textColor = Constants.shered.greyColor
 		textView.translatesAutoresizingMaskIntoConstraints = false
 		textView.font = .systemFont(ofSize: 15)
 		textView.text =  flower?.description
@@ -213,7 +212,7 @@ class SingleItemViewController: UIViewController {
 			return
 		}
 
-		FirebaseManager.shered.addToCart(flower: flower) { (result: Result<Void, Error>) in
+		FirebaseDataBaseManager.shered.addToDatabase(flower: flower, field: .cart) { (result: Result<Void, Error>) in
 			switch result {
 			case .success():
 				self.createAlert(string: "Added to cart")
@@ -232,10 +231,10 @@ class SingleItemViewController: UIViewController {
 	private func createIteminfoStack(title: String, info: String) -> UIStackView {
 		let titleLable = UILabel()
 		titleLable.text = title
-		titleLable.textColor = Constants().greyColor
+		titleLable.textColor = Constants.shered.greyColor
 		let infoLable = UILabel()
 		infoLable.text = info
-		infoLable.textColor = Constants().darkGreyColor
+		infoLable.textColor = Constants.shered.darkGreyColor
 		let stack = UIStackView(arrangedSubviews: [titleLable, infoLable])
 		stack.translatesAutoresizingMaskIntoConstraints = false
 		stack.axis = .vertical
@@ -244,8 +243,8 @@ class SingleItemViewController: UIViewController {
 	}
 
 	private func createBacicInformationImage (string: String) -> UIImageView {
-		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(Constants().greyColor, renderingMode: .alwaysOriginal))
-		image.backgroundColor = Constants().whiteColor
+		let image = UIImageView(image: UIImage(systemName: string)?.withTintColor(Constants.shered.greyColor, renderingMode: .alwaysOriginal))
+		image.backgroundColor = Constants.shered.whiteColor
 		image.layer.cornerRadius = 3
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.clipsToBounds = true
@@ -257,7 +256,7 @@ class SingleItemViewController: UIViewController {
 		let lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.text = string
-		lable.textColor = Constants().greyColor
+		lable.textColor = Constants.shered.greyColor
 		lable.contentMode = .center
 		return lable
 	}
@@ -265,7 +264,7 @@ class SingleItemViewController: UIViewController {
 	private func createBar() {
 		title = flower?.title
 		tabBarController?.tabBar.isHidden = true
-		let saveImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		let saveImage = UIImage(systemName: "heart")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		guard let saveImage = saveImage else {
 			return
 		}
@@ -279,11 +278,11 @@ class SingleItemViewController: UIViewController {
 
 	@objc private func addToFavorte(_ sender: UIBarButtonItem) {
 		fav.toggle()
-		let unfavImage = UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		let unfavImage = UIImage(systemName: "heart")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		guard let unfavImage = unfavImage else {
 			return
 		}
-		let favImage = UIImage(systemName: "heart.fill")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		let favImage = UIImage(systemName: "heart.fill")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		guard let favImage = favImage else {
 			return
 		}
@@ -293,7 +292,7 @@ class SingleItemViewController: UIViewController {
 				return
 			}
 
-			FirebaseManager.shered.addToFavorite(flower: flower) { (result: Result<Void, Error>) in
+			FirebaseDataBaseManager.shered.addToDatabase(flower: flower, field: .favorite) { (result: Result<Void, Error>) in
 				switch result {
 				case .success():
 					self.createAlert(string: "Added to favorite")

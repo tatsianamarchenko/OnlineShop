@@ -42,7 +42,7 @@ extension UITextField {
 		textField.translatesAutoresizingMaskIntoConstraints = false
 		textField.font = UIFont.systemFont(ofSize: 20)
 		textField.textAlignment = .left
-		textField.textColor = Constants().greenColor
+		textField.textColor = Constants.shered.greenColor
 		textField.clearButtonMode = .whileEditing
 		textField.borderStyle = .roundedRect
 		textField.layer.borderWidth = 0
@@ -59,10 +59,10 @@ extension UIButton {
 	func createCustomButton(title: String) -> IndexedButton {
 		let button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
 		button.setTitle(title, for: .normal)
-		button.setTitleColor(Constants().greenColor, for: .selected)
+		button.setTitleColor(Constants.shered.greenColor, for: .selected)
 		button.titleLabel?.textAlignment = .center
 		button.accessibilityIdentifier = title
-		button.backgroundColor = Constants().greenColor
+		button.backgroundColor = Constants.shered.greenColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button

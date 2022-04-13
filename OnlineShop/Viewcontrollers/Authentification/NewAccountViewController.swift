@@ -6,17 +6,14 @@
 //
 
 import UIKit
-import FirebaseAuth
-import Firebase
-import Alamofire
 
 class NewAccountViewController: UIViewController {
 
 	private lazy var accountImageView: UIImageView = {
 		let image = UIImageView()
 		image.translatesAutoresizingMaskIntoConstraints = false
-		image.image = UIImage(systemName: "person")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
-		image.backgroundColor = Constants().whiteColor
+		image.image = UIImage(systemName: "person")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
+		image.backgroundColor = Constants.shered.whiteColor
 		image.clipsToBounds = true
 		image.contentMode = .scaleAspectFill
 		return image
@@ -33,7 +30,7 @@ class NewAccountViewController: UIViewController {
 		var button = UIButton()
 		button.setTitle("Sign Up", for: .normal)
 		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().greenColor
+		button.backgroundColor = Constants.shered.greenColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button
@@ -131,11 +128,11 @@ class NewAccountViewController: UIViewController {
 				  self.alertUserLoginError(string: "enter all information to create a new account")
 				  return
 			  }
-		if FirebaseManager.shered.isPasswardValid(passward) == false {
+		if isPasswardValid(passward) == false {
 			self.alertUserLoginError(string: "please make sure passward is secure enought")
 		}
-		let user = FirebaseManager.AppUser(fullName: fullName, phone: phone, adress: adress, zip: zip, email: email, passward: passward)
-		FirebaseManager.shered.insertUser(with: user) { error in
+		let user = FirebaseAuthManager.AppUser(fullName: fullName, phone: phone, adress: adress, zip: zip, email: email, passward: passward)
+		FirebaseAuthManager.shered.insertUser(with: user) { error in
 				self.alertUserLoginError(string: error.localizedDescription)
 		}
 		let vc = MainTabBarController()
@@ -147,6 +144,11 @@ class NewAccountViewController: UIViewController {
 		let alert = UIAlertController(title: "error", message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
 		present(alert, animated: true)
+	}
+
+	private func isPasswardValid(_ passward: String) -> Bool {
+		let passwardPredicate = NSPredicate(format: "SELF MATCHES %@", Constants.shered.validationPredicate)
+		return passwardPredicate.evaluate(with: passward)
 	}
 }
 
@@ -199,7 +201,7 @@ extension NewAccountViewController : UITextFieldDelegate {
 			textField.resignFirstResponder()
 			passwardTextField.becomeFirstResponder()
 		} else if textField == passwardTextField {
-			if FirebaseManager.shered.isPasswardValid((passwardTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "") == false {
+			if isPasswardValid((passwardTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)) ?? "") == false {
 				// passward isn't secure enought
 				self.alertUserLoginError(string: "please make sure passward is secure enought")
 			}

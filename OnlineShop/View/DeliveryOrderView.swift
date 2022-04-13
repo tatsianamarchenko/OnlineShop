@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Firebase
 
 class DeliveryOrderView: UIView {
 
@@ -16,7 +15,7 @@ class DeliveryOrderView: UIView {
 		title.text = "Support"
 		title.textAlignment = .center
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -27,7 +26,7 @@ class DeliveryOrderView: UIView {
 		title.text = "Let us know if you have any questions or problems with delivery"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -37,7 +36,7 @@ class DeliveryOrderView: UIView {
 		title.text = "9:00AM - 10:00PM"
 		title.textAlignment = .right
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().greyColor
+		title.textColor = Constants.shered.greyColor
 		return title
 	}()
 
@@ -57,7 +56,7 @@ class DeliveryOrderView: UIView {
 
 	private lazy var contactsImage: UIImageView = {
 		var image = UIImageView()
-		image.image = UIImage(systemName: "headphones")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		image.image = UIImage(systemName: "headphones")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
 		return image
@@ -67,7 +66,7 @@ class DeliveryOrderView: UIView {
 		var button = UIButton()
 		button.setTitle("Chat", for: .normal)
 		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().greenColor
+		button.backgroundColor = Constants.shered.greenColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button
@@ -76,12 +75,12 @@ class DeliveryOrderView: UIView {
 	private lazy var  phoneButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Phone", for: .normal)
-		button.setTitleColor(Constants().greenColor, for: .normal)
+		button.setTitleColor(Constants.shered.greenColor, for: .normal)
 		button.layer.borderWidth = 3
 		button.layer.borderColor = CGColor(red: 0.33, green: 0.4, blue: 0.32, alpha: 0.8)
 		button.clipsToBounds = true
 		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().whiteColor
+		button.backgroundColor = Constants.shered.whiteColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button

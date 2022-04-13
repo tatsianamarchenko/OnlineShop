@@ -27,7 +27,7 @@ class InViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-	let bundle = Bundle.main.path(forResource: "videomain", ofType: "mp4")
+		let bundle = Bundle.main.path(forResource: "videomain", ofType: "mp4")
 		guard let bundle = bundle else {
 			return
 		}
@@ -35,7 +35,7 @@ class InViewController: UIViewController {
 
 		let item = AVPlayerItem(url: url)
 
-		player = AVPlayer(playerItem: item) 
+		player = AVPlayer(playerItem: item)
 		playerLayer = AVPlayerLayer(player: player)
 		playerLayer?.frame = CGRect(x: -30, y: 0, width: self.view.frame.size.width*1.3, height: self.view.frame.size.height)
 		guard let player = player else {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import FirebaseAuth
 
 class ProfileViewController: UIViewController {
 
@@ -14,12 +13,12 @@ class ProfileViewController: UIViewController {
 	private lazy var  phoneButton: UIButton = {
 		var button = UIButton()
 		button.setTitle("Phone", for: .normal)
-		button.setTitleColor(Constants().greenColor, for: .normal)
+		button.setTitleColor(Constants.shered.greenColor, for: .normal)
 		button.layer.borderWidth = 3
 		button.layer.borderColor = CGColor(red: 0.33, green: 0.4, blue: 0.32, alpha: 0.8)
 		button.clipsToBounds = true
 		button.titleLabel?.textAlignment = .center
-		button.backgroundColor = Constants().whiteColor
+		button.backgroundColor = Constants.shered.whiteColor
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.layer.cornerRadius = 10
 		return button
@@ -30,7 +29,7 @@ class ProfileViewController: UIViewController {
 		title.translatesAutoresizingMaskIntoConstraints = false
 		title.textAlignment = .center
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -40,7 +39,7 @@ class ProfileViewController: UIViewController {
 		title.text = "Support"
 		title.textAlignment = .center
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -51,7 +50,7 @@ class ProfileViewController: UIViewController {
 		title.text = "Let us know if you have any questions or problems with delivery"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -61,7 +60,7 @@ class ProfileViewController: UIViewController {
 		title.text = "9:00AM - 10:00PM"
 		title.textAlignment = .right
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().greyColor
+		title.textColor = Constants.shered.greyColor
 		return title
 	}()
 
@@ -80,7 +79,7 @@ class ProfileViewController: UIViewController {
 		title.text = "19 Apr 2021, 5:10PM"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().greyColor
+		title.textColor = Constants.shered.greyColor
 		return title
 	}()
 
@@ -90,7 +89,7 @@ class ProfileViewController: UIViewController {
 		title.text = "3 items"
 		title.textAlignment = .right
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().greyColor
+		title.textColor = Constants.shered.greyColor
 		return title
 	}()
 
@@ -100,7 +99,7 @@ class ProfileViewController: UIViewController {
 		lable.text = "Order: 1"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 20)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -110,7 +109,7 @@ class ProfileViewController: UIViewController {
 		title.text = "Estimated Delivery on 21 Apr"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().greenColor
+		title.textColor = Constants.shered.greenColor
 		return title
 	}()
 
@@ -124,7 +123,7 @@ class ProfileViewController: UIViewController {
 
 	private lazy var contactsImage: UIImageView = {
 		var image = UIImageView()
-		image.image = UIImage(systemName: "headphones")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		image.image = UIImage(systemName: "headphones")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
 		return image
@@ -132,7 +131,7 @@ class ProfileViewController: UIViewController {
 
 	private lazy var deliveryImage: UIImageView = {
 		var image = UIImageView()
-		image.image = UIImage(systemName: "list.dash.header.rectangle")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		image.image = UIImage(systemName: "list.dash.header.rectangle")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
 		return image
@@ -144,7 +143,7 @@ class ProfileViewController: UIViewController {
 		lable.text = "Orders"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 20)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -152,7 +151,7 @@ class ProfileViewController: UIViewController {
 		var button = UIButton()
 		button.setTitle("Active", for: .normal)
 		button.titleLabel?.textAlignment = .center
-		button.setTitleColor(Constants().greenColor, for: .normal)
+		button.setTitleColor(Constants.shered.greenColor, for: .normal)
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}()
@@ -161,7 +160,7 @@ class ProfileViewController: UIViewController {
 		var button = UIButton()
 		button.setTitle("History", for: .normal)
 		button.titleLabel?.textAlignment = .center
-		button.setTitleColor(Constants().greenColor, for: .normal)
+		button.setTitleColor(Constants.shered.greenColor, for: .normal)
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
 	}()
@@ -172,7 +171,7 @@ class ProfileViewController: UIViewController {
 		title.text = "Payment"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -182,7 +181,7 @@ class ProfileViewController: UIViewController {
 		lable.text = "*** *** *** 1234"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 20)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -192,7 +191,7 @@ class ProfileViewController: UIViewController {
 		title.text = "09/21"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 15)
-		title.textColor = Constants().greenColor
+		title.textColor = Constants.shered.greenColor
 		return title
 	}()
 
@@ -206,7 +205,7 @@ class ProfileViewController: UIViewController {
 
 	private lazy var envelopeImage: UIImageView = {
 		var image = UIImageView()
-		image.image = UIImage(systemName: "envelope")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		image.image = UIImage(systemName: "envelope")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
 		return image
@@ -218,7 +217,7 @@ class ProfileViewController: UIViewController {
 		lable.text = "lox@mail.ru"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -228,13 +227,13 @@ class ProfileViewController: UIViewController {
 		lable.text = "Advertesing and promotion"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
 	private lazy var phoneImage: UIImageView = {
 		var image = UIImageView()
-		image.image = UIImage(systemName: "iphone.smartbatterycase.gen2")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
+		image.image = UIImage(systemName: "iphone.smartbatterycase.gen2")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
 		image.translatesAutoresizingMaskIntoConstraints = false
 		image.contentMode = .scaleToFill
 		return image
@@ -246,7 +245,7 @@ class ProfileViewController: UIViewController {
 		lable.text = "+234657890"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -256,7 +255,7 @@ class ProfileViewController: UIViewController {
 		lable.text = "Advertesing and promotion"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -303,6 +302,7 @@ class ProfileViewController: UIViewController {
 		profileContactsView.addSubview(phoneLabel)
 		profileContactsView.addSubview(mailLabel)
 		createBarButton()
+
 		NSLayoutConstraint.activate([
 			contactsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
 			contactsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
@@ -459,40 +459,30 @@ class ProfileViewController: UIViewController {
 	}
 
 	private func config() {
-		guard let user = Auth.auth().currentUser else {return}
+		guard let user = FirebaseAuthManager.shered.user else {return}
 		namelLabel.text = user.email
 	}
 
 	private func createBarButton() {
-	  let saveImage = UIImage(systemName: "person.crop.circle.badge.minus")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal)
-	  guard let saveImage = saveImage else {
-		return
-	  }
-	  let button = UIBarButtonItem(image: saveImage,
-								   style: .plain,
-								   target: self,
-								   action: #selector(reset))
+		let saveImage = UIImage(systemName: "person.crop.circle.badge.minus")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal)
+		guard let saveImage = saveImage else {
+			return
+		}
+		let button = UIBarButtonItem(image: saveImage,
+									 style: .plain,
+									 target: self,
+									 action: #selector(reset))
 
-	  navigationItem.rightBarButtonItem = button
+		navigationItem.rightBarButtonItem = button
 	}
 
 	@objc private func reset() {
-		FirebaseManager.shered.signOut { (result: Result<Void, Error>) in
-			switch result {
-			case .success(_):
-				UserDefaults.standard.removeObject(forKey: Constants().userKey)
-				let vc = InViewController()
-				vc.modalPresentationStyle = .fullScreen
-				self.present(vc, animated: true)
-			case .failure(let failure):
-				self.alertUserLoginError(string: failure.localizedDescription)
-			}
-		}
-	}
+		FirebaseAuthManager.shered.signOut {
+			UserDefaults.standard.removeObject(forKey: Constants.shered.userKey)
+			let vc = InViewController()
+			vc.modalPresentationStyle = .fullScreen
+			self.present(vc, animated: true)
 
-	private func alertUserLoginError(string message: String) {
-		let alert = UIAlertController(title: "error", message: message, preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
-		present(alert, animated: true)
+		}
 	}
 }

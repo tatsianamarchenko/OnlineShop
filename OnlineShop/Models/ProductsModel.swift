@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 struct Flower: Codable {
 	var description: String
@@ -19,18 +18,3 @@ struct Flower: Codable {
 	var temperature: String
 	var id: String
 }
-
-struct Image: Codable {
-  let imageData: Data?
-  init(withImage image: Data) {
-	self.imageData = image
-  }
-  func getImage() -> UIImage? {
-	guard let imageData = self.imageData else {
-	  return nil
-	}
-	let image = UIImage(data: imageData)
-	return image
-  }
-}
-

@@ -23,7 +23,7 @@ class ShopCartViewController: UIViewController {
 	}()
 
 	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
-																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
+																	 type: .ballZigZag, color: Constants.shered.greenColor, padding: nil)
 
 	private var  payCartButton = UIButton().createCustomButton(title: "Buy")
 
@@ -32,7 +32,7 @@ class ShopCartViewController: UIViewController {
 		title.translatesAutoresizingMaskIntoConstraints = false
 		title.text = "Total"
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().greenColor
+		title.textColor = Constants.shered.greenColor
 		return title
 	}()
 
@@ -42,7 +42,7 @@ class ShopCartViewController: UIViewController {
 		title.textAlignment = .right
 		title.text = "$0"
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().greenColor
+		title.textColor = Constants.shered.greenColor
 		return title
 	}()
 
@@ -64,7 +64,7 @@ class ShopCartViewController: UIViewController {
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
 		var totalPrice = Double(0)
-		FirebaseManager.shered.fetchCartItem(collection: "users", field: "cart") { flower in
+		FirebaseDataBaseManager.shered.fetchCartItem(collection: "users", field: "cart") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			for flower in self.flowers {
@@ -100,7 +100,7 @@ class ShopCartViewController: UIViewController {
 
 	@objc private func deliteFromCart(_ sender: IndexedButton) {
 		print(sender.buttonIndexPath.row)
-		FirebaseManager.shered.deliteFromCart(flower: flowers[sender.buttonIndexPath.row]) { flower in
+		FirebaseDataBaseManager.shered.deliteFromDatabase(flower: flowers[sender.buttonIndexPath.row], field: .cart) { flower in
 			self.flowers.removeAll {
 				$0.id == flower.id
 			}
@@ -163,14 +163,8 @@ extension ShopCartViewController: UICollectionViewDelegate, UICollectionViewData
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-		let flower = self.flowers[indexPath.row]
-		var new = CatalogViewController.flowers
-		new.removeAll {
-			$0.type != flower.type
+		FilterManager().presentVCWithFiler(index: indexPath) { vc in
+			self.navigationController?.pushViewController(vc, animated: true)
 		}
-
-		let vc = SingleItemViewController(flower: self.flowers[indexPath.row], flowerArray: new)
-		navigationController?.pushViewController(vc, animated: true)
 	}
 }

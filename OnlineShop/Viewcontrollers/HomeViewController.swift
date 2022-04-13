@@ -7,12 +7,10 @@
 
 import UIKit
 import NVActivityIndicatorView
-import FirebaseAuth
 
 class HomeViewController: UIViewController {
 
 	var categories = [Category]()
-	var firebaseManager = FirebaseManager()
 	
 	private lazy var scrollView : UIScrollView = {
 		var scrollView = UIScrollView()
@@ -21,7 +19,7 @@ class HomeViewController: UIViewController {
 	}()
 
 	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
-																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
+																	 type: .ballZigZag, color: Constants.shered.greenColor, padding: nil)
 
 	private lazy  var namelLabel: UILabel = {
 		var title = UILabel()
@@ -29,7 +27,7 @@ class HomeViewController: UIViewController {
 		title.text = "Categories"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -39,7 +37,7 @@ class HomeViewController: UIViewController {
 		title.text = "Sale"
 		title.textAlignment = .left
 		title.font = UIFont.systemFont(ofSize: 20)
-		title.textColor = Constants().darkGreyColor
+		title.textColor = Constants.shered.darkGreyColor
 		return title
 	}()
 
@@ -77,13 +75,13 @@ class HomeViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		activityIndicatorView.startAnimating()
-		firebaseManager.fetchData(document: "Category") { category in
+		FirebaseDataBaseManager.shered.fetchData(collection: "Category") { category in
 			self.categories.append(category)
 			self.mainCollection.reloadData()
 			self.activityIndicatorView.stopAnimating()
 		}
-		firebaseManager.fetchImage(collection: "Sale", imageView: saleImage)
-		firebaseManager.fetchImage(collection: "Accessories", imageView: accessoryImage)
+		FirebaseDataBaseManager.shered.fetchImage(collection: "Sale", imageView: saleImage)
+		FirebaseDataBaseManager.shered.fetchImage(collection: "Accessories", imageView: accessoryImage)
 		view.addSubview(scrollView)
 		view.addSubview(activityIndicatorView)
 		scrollView.addSubview(saleView)
@@ -104,53 +102,38 @@ class HomeViewController: UIViewController {
 			scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 			scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 			scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-		])
+			scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-		NSLayoutConstraint.activate([
 			saleLable.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
 			saleLable.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
 			saleLable.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: 10),
-		])
 
-
-		NSLayoutConstraint.activate([
 			saleView.topAnchor.constraint(equalTo: saleLable.bottomAnchor, constant: 10),
 			saleView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
 			saleView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: 10),
 			saleView.heightAnchor.constraint(equalToConstant: 200),
-			saleView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20)
-		])
+			saleView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
 
-		NSLayoutConstraint.activate([
 			saleImage.leadingAnchor.constraint(equalTo: saleView.leadingAnchor),
 			saleImage.widthAnchor.constraint(equalTo: saleView.widthAnchor),
 			saleImage.heightAnchor.constraint(equalTo: saleView.heightAnchor),
 			saleImage.topAnchor.constraint(equalTo: saleView.topAnchor),
-		])
 
-		NSLayoutConstraint.activate([
 			accessoryImage.leadingAnchor.constraint(equalTo: accessoriesView.leadingAnchor),
 			accessoryImage.widthAnchor.constraint(equalTo: accessoriesView.widthAnchor),
 			accessoryImage.heightAnchor.constraint(equalTo: accessoriesView.heightAnchor),
 			accessoryImage.topAnchor.constraint(equalTo: accessoriesView.topAnchor),
-		])
 
-		NSLayoutConstraint.activate([
 			namelLabel.topAnchor.constraint(equalTo: saleView.bottomAnchor, constant: 10),
 			namelLabel.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
 			namelLabel.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: 10),
-		])
 
-		NSLayoutConstraint.activate([
 			mainCollection.topAnchor.constraint(equalTo: namelLabel.bottomAnchor, constant: 10),
 			mainCollection.bottomAnchor.constraint(equalTo: accessoriesView.topAnchor, constant: -10),
 			mainCollection.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
 			mainCollection.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-			mainCollection.heightAnchor.constraint(equalToConstant: 330)
-		])
+			mainCollection.heightAnchor.constraint(equalToConstant: 330),
 
-		NSLayoutConstraint.activate([
 			accessoriesView.topAnchor.constraint(equalTo: mainCollection.bottomAnchor, constant: 10),
 			accessoriesView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: 10),
 			accessoriesView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: 10),

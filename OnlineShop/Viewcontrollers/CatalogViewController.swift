@@ -7,7 +7,6 @@
 
 import UIKit
 import NVActivityIndicatorView
-import Firebase
 
 class CatalogViewController: UIViewController {
 
@@ -15,11 +14,11 @@ class CatalogViewController: UIViewController {
 
 	private var filtered = [Flower]()
 	private var searchActive : Bool = false
-	private var firebaseManager = FirebaseManager()
+	private var firebaseDataBaseManager = FirebaseDataBaseManager()
 	private var sort: String?
 
 	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
-																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
+																	 type: .ballZigZag, color: Constants.shered.greenColor, padding: nil)
 
 	private lazy var scView: UIScrollView = {
 		var scView = UIScrollView(frame:.zero)
@@ -75,46 +74,9 @@ class CatalogViewController: UIViewController {
 		super.viewWillAppear(animated)
 		activityIndicatorView.startAnimating()
 		tabBarController?.tabBar.isHidden = false
-		loadInfo(sort: sort)
-	}
-
-	private func loadInfo(sort: String?) {
-		CatalogViewController.flowers.removeAll()
-		firebaseManager.fetchMain(document: "Flowers") { flower in
-			if self.sort == nil {
-				CatalogViewController.flowers.append(flower)
-				self.itemsCollection.reloadData()
-				self.activityIndicatorView.stopAnimating()
-			}
-			else {
-				switch sort {
-				case "Living room":
-					if flower.type == "Living room" {
-						CatalogViewController.flowers.append(flower)
-					}
-					self.itemsCollection.reloadData()
-					self.activityIndicatorView.stopAnimating()
-				case "Bathroom":
-					if flower.type == "Bathroom" {
-						CatalogViewController.flowers.append(flower)
-					}
-					self.itemsCollection.reloadData()
-					self.activityIndicatorView.stopAnimating()
-				case "Bedroom":
-					if flower.type == "Bedroom" {
-						CatalogViewController.flowers.append(flower)
-					}
-					self.itemsCollection.reloadData()
-					self.activityIndicatorView.stopAnimating()
-				case "Kitchen":
-					if flower.type == "Kitchen" {
-						CatalogViewController.flowers.append(flower)
-					}
-					self.itemsCollection.reloadData()
-					self.activityIndicatorView.stopAnimating()
-				default: 	break
-				}
-			}
+		FilterManager().loadInfo(sort: sort) {
+			self.itemsCollection.reloadData()
+			self.activityIndicatorView.stopAnimating()
 		}
 	}
 
@@ -129,8 +91,8 @@ class CatalogViewController: UIViewController {
 			button.titleLabel?.font = .systemFont(ofSize: 20)
 			button.addTarget(self, action: #selector(btnTouch), for: .touchUpInside)
 			button.titleLabel?.textAlignment = .center
-			button.setTitleColor(Constants().greenColor, for: .normal)
-			button.setTitleColor(Constants().darkGreyColor, for: .selected)
+			button.setTitleColor(Constants.shered.greenColor, for: .normal)
+			button.setTitleColor(Constants.shered.darkGreyColor, for: .selected)
 			button.frame = CGRect(x: xOffset, y: CGFloat(buttonPadding), width: 110, height: 30)
 			xOffset = xOffset + CGFloat(buttonPadding) + button.frame.size.width
 			scView.addSubview(button)
@@ -140,39 +102,9 @@ class CatalogViewController: UIViewController {
 
 	@objc private func btnTouch(_ button: UIButton) {
 		activityIndicatorView.startAnimating()
-		CatalogViewController.flowers.removeAll()
-		firebaseManager.fetchMain(document: "Flowers") { flower in
-			switch button.accessibilityIdentifier {
-			case "All":
-				CatalogViewController.flowers.append(flower)
-				self.itemsCollection.reloadData()
-				self.activityIndicatorView.stopAnimating()
-			case "Living room":
-				if flower.type == "Living room" {
-					CatalogViewController.flowers.append(flower)
-				}
-				self.itemsCollection.reloadData()
-				self.activityIndicatorView.stopAnimating()
-			case "Bathroom":
-				if flower.type == "Bathroom" {
-					CatalogViewController.flowers.append(flower)
-				}
-				self.itemsCollection.reloadData()
-				self.activityIndicatorView.stopAnimating()
-			case "Bedroom":
-				if flower.type == "Bedroom" {
-					CatalogViewController.flowers.append(flower)
-				}
-				self.itemsCollection.reloadData()
-				self.activityIndicatorView.stopAnimating()
-			case "Kitchen":
-				if flower.type == "Kitchen" {
-					CatalogViewController.flowers.append(flower)
-				}
-				self.itemsCollection.reloadData()
-				self.activityIndicatorView.stopAnimating()
-			default: 	break
-			}
+		FilterManager().loadInfo(sort: button.accessibilityIdentifier ?? "") {
+			self.itemsCollection.reloadData()
+			self.activityIndicatorView.stopAnimating()
 		}
 	}
 
@@ -265,13 +197,9 @@ extension CatalogViewController: UICollectionViewDelegate, UICollectionViewDataS
 	}
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let flower = CatalogViewController.flowers[indexPath.row]
-		var new = CatalogViewController.flowers
-		new.removeAll {
-			$0.type != flower.type
+		FilterManager().presentVCWithFiler(index: indexPath) { vc in
+			self.navigationController?.pushViewController(vc, animated: true)
 		}
-		let vc = SingleItemViewController(flower: flower, flowerArray: new)
-		self.navigationController?.pushViewController(vc, animated: true)
 	}
 }
 

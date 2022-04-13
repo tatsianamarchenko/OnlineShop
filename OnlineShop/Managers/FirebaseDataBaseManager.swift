@@ -6,86 +6,30 @@
 //
 
 import Foundation
-import FirebaseDatabase
-import FirebaseAuth
 import Firebase
-import FirebaseFirestore
-import FirebaseStorage
-import CoreMedia
 
-final class FirebaseManager {
+final class FirebaseDataBaseManager {
 
-	static let shered = FirebaseManager()
+	static let shered = FirebaseDataBaseManager()
 	private let db = Firestore.firestore()
-	private let user = Auth.auth().currentUser?.email
-
-	private let cartFieldFirebase = "cart"
-	private let favoriteFieldFirebase = "favorite"
+	private let userEmail = Auth.auth().currentUser?.email
 	private let usersCollectionFirebase = "users"
 
-	public func insertUser(with user: AppUser,  completion: @escaping (Error) -> Void) {
-		Auth.auth().createUser(withEmail: user.email, password: user.passward) { authResult, error in
-			if  error != nil {
-				completion(error!)
-			}
-			else {
-				let db = Firestore.firestore()
-				db.collection(self.usersCollectionFirebase).document(user.email).setData(["fullName": user.fullName,
-																	 "phone": user.phone,
-																	 "adress": user.adress,
-																	 "zip": user.zip,
-																	 "email": user.email,
-																	 "passward": user.passward,
-																	 "cart": [],
-																	 "favorite": []]) { error in
-					if error != nil {
-						completion(error!)
-					}
-				}
-
-				UserDefaults.standard.set(user.email, forKey: Constants().userKey)
-			}
-		}
+	public func addUserToDatabase(with user: FirebaseAuthManager.AppUser) {
+		let db = Firestore.firestore()
+		db.collection(self.usersCollectionFirebase).document(user.email).setData(["fullName": user.fullName,
+																				  "phone": user.phone,
+																				  "adress": user.adress,
+																				  "zip": user.zip,
+																				  "email": user.email,
+																				  "passward": user.passward,
+																				  "cart": [],
+																				  "favorite": []])
+		UserDefaults.standard.set(user.email, forKey: Constants.shered.userKey)
 	}
 
-	public func enterUser(with email: String, passward: String, completion: @escaping((Result<AuthDataResult, Error>) -> Void)) {
-		Auth.auth().signIn(withEmail: email, password: passward) { authResult, error in
-			if  error != nil {
-				completion(.failure(error!))
-			}
-			else {
-				UserDefaults.standard.set(email, forKey: Constants().userKey)
-				guard let authResult = authResult else {return}
-				completion(.success(authResult))
-			}
-		}
-	}
-
-	public func signOut (completion: @escaping((Result<Void, Error>) -> Void)) {
-		do {
-			let a = try Auth.auth().signOut()
-			completion(.success(a))
-		} catch let error {
-			completion(.failure(error))
-		}
-	}
-
-	public func isPasswardValid(_ passward: String) -> Bool {
-		let passwardPredicate = NSPredicate(format: "SELF MATCHES %@", Constants().validationPredicate)
-		return passwardPredicate.evaluate(with: passward)
-	}
-
-	struct AppUser {
-		let fullName: String
-		let phone: String
-		let adress: String
-		let zip: String
-		let email: String
-		let passward: String
-	}
-
-	public func fetchData(document: String, complition: @escaping (Category)-> Void) {
-		db.collection(document).getDocuments { (querySnapshot, error) in
+	public func fetchData(collection: String, complition: @escaping (Category)-> Void) {
+		db.collection(collection).getDocuments { (querySnapshot, error) in
 			guard let documents = querySnapshot?.documents else {
 				print("No documents")
 				return
@@ -136,12 +80,13 @@ final class FirebaseManager {
 		}
 	}
 
-	public func fetchMain(document: String, complition: @escaping (Flower)-> Void) {
-		db.collection(document).getDocuments { (querySnapshot, error) in
+	public func fetchMain(collection: String, complition: @escaping (Flower)-> Void) {
+		db.collection(collection).getDocuments { (querySnapshot, error) in
 			guard let documents = querySnapshot?.documents else {
 				print("No documents")
 				return
 			}
+
 			documents.map { queryDocumentSnapshot in
 				let	data = queryDocumentSnapshot.data()
 				var image: Image?
@@ -169,10 +114,10 @@ final class FirebaseManager {
 	}
 
 	public func fetchCartItem(collection: String, field: String, complition: @escaping (Flower)-> Void) {
-		guard let user = user else {return}
-		var collection = db.collection(collection).document(user)
+		guard let userEmail = userEmail else {return}
+		let collection = db.collection(collection).document(userEmail)
 		collection.getDocument { documentSnapshot, error in
-			var cart = documentSnapshot?[field] as? [String]
+			let cart = documentSnapshot?[field] as? [String]
 			guard let cart = cart else {return}
 			for i in 0..<cart.count {
 				let collection = self.db.collection("Flowers").document(cart[i])
@@ -202,30 +147,13 @@ final class FirebaseManager {
 		}
 	}
 
-	public func addToCart(flower: Flower , complition: @escaping (Result<Void, Error>) -> Void) {
-		guard let user = user else {return}
-		let collection = db.collection(self.usersCollectionFirebase).document(user)
+	public func addToDatabase(flower: Flower, field: TypeOfAction, complition: @escaping (Result<Void, Error>) -> Void) {
+		guard let userEmail = userEmail else {return}
+		let collection = db.collection(self.usersCollectionFirebase).document(userEmail)
 		collection.getDocument { documentSnapshot, error in
-			var cart = documentSnapshot?[self.cartFieldFirebase] as? [String]
-			cart?.append(flower.id)
-			collection.updateData([self.cartFieldFirebase: cart]) { error in
-				if error != nil {
-					complition(.failure(error!))
-				} else {
-					complition(.success(()))
-				}
-
-			}
-		}
-	}
-
-	public func addToFavorite(flower: Flower , complition: @escaping (Result<Void, Error>) -> Void) {
-		guard let user = user else {return}
-		let collection = db.collection(self.usersCollectionFirebase).document(user)
-		collection.getDocument { documentSnapshot, error in
-			var favorite = documentSnapshot?[self.favoriteFieldFirebase] as? [String]
+			var favorite = documentSnapshot?[field.rawValue] as? [String]
 			favorite?.append(flower.id)
-			collection.updateData([self.favoriteFieldFirebase : favorite]) { error in
+			collection.updateData([field.rawValue : favorite ?? ""]) { error in
 				if error != nil {
 					complition(.failure(error!))
 				} else {
@@ -235,21 +163,17 @@ final class FirebaseManager {
 		}
 	}
 
-	public func deliteFromFavorite(flower: Flower, complition: @escaping (Flower) -> Void) {
-		guard let user = user else {return}
-		let a = db.collection(self.usersCollectionFirebase).document(user)
+	public func deliteFromDatabase(flower: Flower, field: TypeOfAction, complition: @escaping (Flower) -> Void) {
+		guard let userEmail = userEmail else {return}
+		let a = db.collection(self.usersCollectionFirebase).document(userEmail)
 		complition(flower)
 		a.updateData([
-			favoriteFieldFirebase : FieldValue.arrayRemove([flower.id])
+			field.rawValue : FieldValue.arrayRemove([flower.id])
 		])
 	}
 
-	public func deliteFromCart(flower: Flower, complition: @escaping (Flower) -> Void) {
-		guard let user = user else {return}
-		let a = db.collection(self.usersCollectionFirebase).document(user)
-		complition(flower)
-		a.updateData([
-			cartFieldFirebase : FieldValue.arrayRemove([flower.id])
-		])
+	enum TypeOfAction: String {
+		case cart = "cart"
+		case favorite = "favorite"
 	}
 }

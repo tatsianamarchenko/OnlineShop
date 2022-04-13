@@ -25,7 +25,7 @@ class FavoriteViewController: UIViewController {
 	}()
 
 	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
-																	 type: .ballZigZag, color: Constants().greenColor, padding: nil)
+																	 type: .ballZigZag, color: Constants.shered.greenColor, padding: nil)
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -41,7 +41,7 @@ class FavoriteViewController: UIViewController {
 		activityIndicatorView.startAnimating()
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
-		FirebaseManager.shered.fetchCartItem(collection: "users", field: "favorite") { flower in
+		FirebaseDataBaseManager.shered.fetchCartItem(collection: "users", field: "favorite") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			self.activityIndicatorView.stopAnimating()
@@ -58,8 +58,7 @@ class FavoriteViewController: UIViewController {
 	}
 
 	 @objc private func deliteFromFavorite(_ sender: IndexedButton) {
-		print(sender.buttonIndexPath.row)
-		FirebaseManager.shered.deliteFromFavorite(flower: flowers[sender.buttonIndexPath.row]) { flower in
+		 FirebaseDataBaseManager.shered.deliteFromDatabase(flower: flowers[sender.buttonIndexPath.row], field: .favorite) { flower in
 			self.flowers.removeAll {
 				$0.id == flower.id
 			}
@@ -122,12 +121,8 @@ extension FavoriteViewController: UICollectionViewDelegate, UICollectionViewData
 		}
 
 		func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-			let flower = self.flowers[indexPath.row]
-			var new = CatalogViewController.flowers
-			new.removeAll {
-				$0.type != flower.type
+			FilterManager().presentVCWithFiler(index: indexPath) { vc in
+				self.navigationController?.pushViewController(vc, animated: true)
 			}
-			let vc = SingleItemViewController(flower: flowers[indexPath.row], flowerArray: nil)
-			navigationController?.pushViewController(vc, animated: true)
 		}
 	}

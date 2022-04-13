@@ -14,7 +14,7 @@ class ShopCollectionViewCell: UICollectionViewCell {
 
 	private lazy var nameLabel: UILabel = {
 		var lable = UILabel()
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		lable.font = .systemFont(ofSize: 20, weight: .medium)
 		lable.backgroundColor = .systemBackground
 		lable.lineBreakMode = .byWordWrapping
@@ -26,7 +26,7 @@ class ShopCollectionViewCell: UICollectionViewCell {
 
 	private lazy var  favoriteButton: IndexedButton = {
 		var button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
-		button.setImage(UIImage(systemName: "heart")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
+		button.setImage(UIImage(systemName: "heart")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal), for: .normal)
 		button.addTarget(self, action: #selector(toFavorite), for: .touchUpInside)
 		button.titleLabel?.textAlignment = .center
 		button.translatesAutoresizingMaskIntoConstraints = false
@@ -37,7 +37,7 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		var lable = UILabel()
 		lable.font = .systemFont(ofSize: 15, weight: .regular)
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 
@@ -45,7 +45,7 @@ class ShopCollectionViewCell: UICollectionViewCell {
 		var lable = UILabel()
 		lable.font = .systemFont(ofSize: 20, weight: .medium)
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		lable.textAlignment = .right
 		return lable
 	}()
@@ -133,11 +133,11 @@ class ShopCollectionViewCell: UICollectionViewCell {
 	}
 
 	@objc private func toFavorite(_ sender: IndexedButton) {
-		FirebaseManager.shered.addToFavorite(flower: CatalogViewController.flowers[sender.buttonIndexPath.row]) { (result: Result<Void, Error>) in
+		FirebaseDataBaseManager.shered.addToDatabase(flower: CatalogViewController.flowers[sender.buttonIndexPath.row], field: .favorite) { (result: Result<Void, Error>) in
 			switch result {
 			case .success():
 				self.createAlert(string: "Added to favorite")
-				self.favoriteButton.setImage(UIImage(systemName: "heart.fill")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
+				self.favoriteButton.setImage(UIImage(systemName: "heart.fill")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal), for: .normal)
 			case .failure(let error):
 				self.createAlert(string: error.localizedDescription)
 			}

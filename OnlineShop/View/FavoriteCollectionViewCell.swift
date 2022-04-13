@@ -15,7 +15,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 	private var flower: Flower?
 	private lazy var nameLabel: UILabel = {
 		var lable = UILabel()
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		lable.font = .systemFont(ofSize: 20, weight: .medium)
 		lable.backgroundColor = .systemBackground
 		lable.lineBreakMode = .byWordWrapping
@@ -27,7 +27,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 
 	var  removeButton: IndexedButton = {
 		var button = IndexedButton(buttonIndexPath: IndexPath(index: 0))
-		button.setImage(UIImage(systemName: "xmark.bin")?.withTintColor(Constants().greenColor, renderingMode: .alwaysOriginal), for: .normal)
+		button.setImage(UIImage(systemName: "xmark.bin")?.withTintColor(Constants.shered.greenColor, renderingMode: .alwaysOriginal), for: .normal)
 		button.titleLabel?.textAlignment = .center
 		button.translatesAutoresizingMaskIntoConstraints = false
 		return button
@@ -37,7 +37,7 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		var lable = UILabel()
 		lable.font = .systemFont(ofSize: 15, weight: .regular)
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.textColor = Constants().darkGreyColor
+		lable.textColor = Constants.shered.darkGreyColor
 		return lable
 	}()
 	
@@ -54,14 +54,14 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		var stepper = GMStepper()
 		stepper.maximumValue = 100
 		stepper.minimumValue = 1
-		stepper.buttonsTextColor = Constants().greyColor
+		stepper.buttonsTextColor = Constants.shered.greyColor
 
-		stepper.buttonsBackgroundColor = Constants().whiteColor
-		stepper.limitHitAnimationColor = Constants().greyColor
+		stepper.buttonsBackgroundColor = Constants.shered.whiteColor
+		stepper.limitHitAnimationColor = Constants.shered.greyColor
 		stepper.labelBackgroundColor = .systemBackground
-		stepper.labelTextColor = Constants().greyColor
+		stepper.labelTextColor = Constants.shered.greyColor
 		stepper.labelFont = .systemFont(ofSize: 15, weight: .medium)
-		stepper.tintColor = Constants().greyColor
+		stepper.tintColor = Constants.shered.greyColor
 		stepper.translatesAutoresizingMaskIntoConstraints = false
 		stepper.stepValue = 1
 		return stepper
@@ -108,8 +108,8 @@ class FavoriteCollectionViewCell: UICollectionViewCell {
 		guard let flower = self.flower else {
 			return
 		}
-
-		FirebaseManager.shered.addToCart(flower: flower) { (result: Result<Void, Error>) in
+		
+		FirebaseDataBaseManager.shered.addToDatabase(flower: flower, field: .cart) { (result: Result<Void, Error>) in
 			switch result {
 			case .success():
 				self.createAlert(string: "Added to cart")
