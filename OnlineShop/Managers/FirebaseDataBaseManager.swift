@@ -16,7 +16,6 @@ final class FirebaseDataBaseManager {
 	private let usersCollectionFirebase = "users"
 
 	public func addUserToDatabase(with user: FirebaseAuthManager.AppUser) {
-		let db = Firestore.firestore()
 		db.collection(self.usersCollectionFirebase).document(user.email).setData(["fullName": user.fullName,
 																				  "phone": user.phone,
 																				  "adress": user.adress,
@@ -25,7 +24,26 @@ final class FirebaseDataBaseManager {
 																				  "passward": user.passward,
 																				  "cart": [],
 																				  "favorite": []])
-		UserDefaults.standard.set(user.email, forKey: Constants.shered.userKey)
+	}
+
+	public func getUserFromDatabase(with userEmail: String, field: String, complition: @escaping (GeneralUser)-> Void) {
+		db.collection(self.usersCollectionFirebase).document(userEmail).getDocument { documentSnapshot, error in
+			let fullName = documentSnapshot?["fullName"] as? String ?? ""
+			let phone = documentSnapshot?["phone"] as? String ?? ""
+			let adress = documentSnapshot?["adress"] as? String ?? ""
+			let zip = documentSnapshot?["zip"] as? String ?? ""
+			let email = documentSnapshot?["email"] as? String ?? ""
+			let generalUser = GeneralUser(fullNam: fullName, phone: phone, adress: adress, zip: zip, email: email)
+			complition(generalUser)
+		}
+	}
+
+	struct GeneralUser {
+		let fullNam: String
+		let phone: String
+		let adress: String
+		let zip: String
+		let email: String
 	}
 
 	public func fetchData(collection: String, complition: @escaping (Category)-> Void) {

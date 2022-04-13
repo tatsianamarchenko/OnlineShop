@@ -20,6 +20,7 @@ class FirebaseAuthManager {
 			}
 			else {
 				self.firebaseManager.addUserToDatabase(with: user)
+				UserDefaults.standard.set(user.email, forKey: Constants.shered.userKey)
 			}
 		}
 	}
@@ -31,7 +32,6 @@ class FirebaseAuthManager {
 			}
 			else {
 				UserDefaults.standard.set(email, forKey: Constants.shered.userKey)
-				guard let authResult = authResult else {return}
 				completion(.success(()))
 			}
 		}

@@ -69,7 +69,6 @@ class ProfileViewController: UIViewController {
 		lable.translatesAutoresizingMaskIntoConstraints = false
 		lable.numberOfLines = 2
 		lable.font = .systemFont(ofSize: 15)
-		lable.text = "Lavender plants are small, branching and spreading shrubs with grey-green leaves and long flowering shoots. The leaves can be simple or pinnate measuring 30–50 mm (1–2 in) in length. The plant produces flowers on shoots or spikes which can be 20–40 cm (8–16 in) long. The flowers are lilac or blue in color."
 		return lable
 	}()
 
@@ -214,7 +213,7 @@ class ProfileViewController: UIViewController {
 	private lazy  var mailLabel: UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.text = "lox@mail.ru"
+		lable.text = FirebaseAuthManager.shered.user?.email
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
 		lable.textColor = Constants.shered.darkGreyColor
@@ -242,7 +241,6 @@ class ProfileViewController: UIViewController {
 	private lazy  var phoneLabel: UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.text = "+234657890"
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
 		lable.textColor = Constants.shered.darkGreyColor
@@ -267,6 +265,26 @@ class ProfileViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .systemBackground
+		addView()
+		makeConstraints()
+		config()
+		FirebaseDataBaseManager.shered.getUserFromDatabase(with: FirebaseAuthManager.shered.user?.email ?? "", field: "users") { user in
+			print(user)
+			self.phoneLabel.text =  user.phone
+			self.mailLabel.text = user.email
+			self.namelLabel.text = user.fullNam
+			self.adressLabel.text = user.adress + ", " + user.zip
+			self.title = user.fullNam
+		}
+	}
+
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		photoOfProfile.layer.cornerRadius = 10
+		photoOfProfile.clipsToBounds = true
+	}
+
+	func addView() {
 		view.addSubview(photoOfProfile)
 		view.addSubview(contactsView)
 		view.addSubview(orderView)
@@ -302,7 +320,9 @@ class ProfileViewController: UIViewController {
 		profileContactsView.addSubview(phoneLabel)
 		profileContactsView.addSubview(mailLabel)
 		createBarButton()
+	}
 
+	func makeConstraints() {
 		NSLayoutConstraint.activate([
 			contactsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
 			contactsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
@@ -449,13 +469,6 @@ class ProfileViewController: UIViewController {
 			suppordAccessebilityLabel.topAnchor.constraint(equalTo: contactsView.topAnchor, constant: 10),
 
 		])
-		config()
-	}
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		photoOfProfile.layer.cornerRadius = 10
-		photoOfProfile.clipsToBounds = true
 	}
 
 	private func config() {
@@ -479,6 +492,7 @@ class ProfileViewController: UIViewController {
 	@objc private func reset() {
 		FirebaseAuthManager.shered.signOut {
 			UserDefaults.standard.removeObject(forKey: Constants.shered.userKey)
+			print(UserDefaults.standard.object(forKey: Constants.shered.userKey))
 			let vc = InViewController()
 			vc.modalPresentationStyle = .fullScreen
 			self.present(vc, animated: true)
