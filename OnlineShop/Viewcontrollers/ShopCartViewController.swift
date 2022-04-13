@@ -10,6 +10,7 @@ import NVActivityIndicatorView
 
 class ShopCartViewController: UIViewController {
 	private var flowers = [Flower]()
+
 	private lazy var itemsCollection : UICollectionView = {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout.init()
 		layout.scrollDirection = .vertical
@@ -64,7 +65,7 @@ class ShopCartViewController: UIViewController {
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
 		var totalPrice = Double(0)
-		FirebaseDataBaseManager.shered.fetchCartItem(collection: "users", field: "cart") { flower in
+		FirebaseDataBaseManager.shered.fetchItems(collection: "users", field: "cart") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			for flower in self.flowers {

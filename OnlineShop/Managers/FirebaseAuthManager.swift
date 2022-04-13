@@ -40,6 +40,7 @@ class FirebaseAuthManager {
 	public func signOut (completion: @escaping(() -> Void)) {
 		do {
 			try Auth.auth().signOut()
+			UserDefaults.standard.removeObject(forKey: Constants.shered.userKey)
 			completion()
 		} catch let error {
 			print(error)

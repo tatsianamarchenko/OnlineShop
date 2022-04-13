@@ -14,12 +14,10 @@ class CatalogViewController: UIViewController {
 
 	private var filtered = [Flower]()
 	private var searchActive : Bool = false
-	private var firebaseDataBaseManager = FirebaseDataBaseManager()
 	private var sort: String?
 
 	private lazy var activityIndicatorView = NVActivityIndicatorView(frame: CGRect(x: view.frame.midX-50, y: view.frame.midY-50, width: 100, height: 100),
 																	 type: .ballZigZag, color: Constants.shered.greenColor, padding: nil)
-
 	private lazy var scView: UIScrollView = {
 		var scView = UIScrollView(frame:.zero)
 		scView.translatesAutoresizingMaskIntoConstraints = false
@@ -92,7 +90,7 @@ class CatalogViewController: UIViewController {
 			button.addTarget(self, action: #selector(btnTouch), for: .touchUpInside)
 			button.titleLabel?.textAlignment = .center
 			button.setTitleColor(Constants.shered.greenColor, for: .normal)
-			button.setTitleColor(Constants.shered.darkGreyColor, for: .selected)
+			button.setTitleColor(Constants().greyColor, for: .selected)
 			button.frame = CGRect(x: xOffset, y: CGFloat(buttonPadding), width: 110, height: 30)
 			xOffset = xOffset + CGFloat(buttonPadding) + button.frame.size.width
 			scView.addSubview(button)

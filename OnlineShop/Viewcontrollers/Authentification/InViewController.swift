@@ -26,7 +26,7 @@ class InViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		let video = VideoManager(view: view)
-		video.addToView(name: "videomain", size: CGRect(x: -30, y: 0, width: (view?.frame.size.width)!*1.3, height: (view?.frame.size.height)!))
+		video.addToView(name: "videomain", size: CGRect(x: -60, y: 0, width: (view?.frame.size.width)!*1.5, height: (view?.frame.size.height)!))
 	}
 
 	@objc private func tapped(_ button: UIButton) {

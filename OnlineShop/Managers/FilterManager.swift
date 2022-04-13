@@ -9,7 +9,18 @@ import Foundation
 
 class FilterManager {
 
-	 func loadInfo(sort: String?, complition: @escaping () -> Void) {
+	static var fav = [Flower]()
+
+	func favorite() {
+		FirebaseDataBaseManager.shered.fetchItems(collection: "users", field: "favorite") { flower in
+			FilterManager.fav.append(flower)
+		}
+	}
+
+
+
+	func loadInfo(sort: String?, complition: @escaping () -> Void) {
+		self.favorite()
 		CatalogViewController.flowers.removeAll()
 		FirebaseDataBaseManager.shered.fetchMain(collection: "Flowers") { flower in
 			if sort == nil {

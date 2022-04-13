@@ -131,7 +131,7 @@ final class FirebaseDataBaseManager {
 		}
 	}
 
-	public func fetchCartItem(collection: String, field: String, complition: @escaping (Flower)-> Void) {
+	public func fetchItems(collection: String, field: String, complition: @escaping (Flower)-> Void) {
 		guard let userEmail = userEmail else {return}
 		let collection = db.collection(collection).document(userEmail)
 		collection.getDocument { documentSnapshot, error in

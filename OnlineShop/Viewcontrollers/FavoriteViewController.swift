@@ -41,7 +41,7 @@ class FavoriteViewController: UIViewController {
 		activityIndicatorView.startAnimating()
 		tabBarController?.tabBar.isHidden = false
 		self.flowers.removeAll()
-		FirebaseDataBaseManager.shered.fetchCartItem(collection: "users", field: "favorite") { flower in
+		FirebaseDataBaseManager.shered.fetchItems(collection: "users", field: "favorite") { flower in
 			self.flowers.append(flower)
 			self.itemsCollection.reloadData()
 			self.activityIndicatorView.stopAnimating()

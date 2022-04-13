@@ -213,7 +213,6 @@ class ProfileViewController: UIViewController {
 	private lazy  var mailLabel: UILabel = {
 		var lable = UILabel()
 		lable.translatesAutoresizingMaskIntoConstraints = false
-		lable.text = FirebaseAuthManager.shered.user?.email
 		lable.textAlignment = .left
 		lable.font = UIFont.systemFont(ofSize: 15)
 		lable.textColor = Constants.shered.darkGreyColor
@@ -268,14 +267,6 @@ class ProfileViewController: UIViewController {
 		addView()
 		makeConstraints()
 		config()
-		FirebaseDataBaseManager.shered.getUserFromDatabase(with: FirebaseAuthManager.shered.user?.email ?? "", field: "users") { user in
-			print(user)
-			self.phoneLabel.text =  user.phone
-			self.mailLabel.text = user.email
-			self.namelLabel.text = user.fullNam
-			self.adressLabel.text = user.adress + ", " + user.zip
-			self.title = user.fullNam
-		}
 	}
 
 	override func viewDidLayoutSubviews() {
@@ -473,7 +464,16 @@ class ProfileViewController: UIViewController {
 
 	private func config() {
 		guard let user = FirebaseAuthManager.shered.user else {return}
-		namelLabel.text = user.email
+
+		FirebaseDataBaseManager.shered.getUserFromDatabase(with: user.email ?? "", field: "users") { user in
+			print(user)
+			self.phoneLabel.text =  user.phone
+			self.mailLabel.text = user.email
+			self.namelLabel.text = user.fullNam
+			self.adressLabel.text = user.adress + ", " + user.zip
+			self.title = user.fullNam
+		}
+
 	}
 
 	private func createBarButton() {
@@ -491,7 +491,6 @@ class ProfileViewController: UIViewController {
 
 	@objc private func reset() {
 		FirebaseAuthManager.shered.signOut {
-			UserDefaults.standard.removeObject(forKey: Constants.shered.userKey)
 			print(UserDefaults.standard.object(forKey: Constants.shered.userKey))
 			let vc = InViewController()
 			vc.modalPresentationStyle = .fullScreen
