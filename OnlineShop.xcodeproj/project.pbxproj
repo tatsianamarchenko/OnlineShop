@@ -23,6 +23,7 @@
 		BFAC2F19280715B7000060FE /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAC2F18280715B7000060FE /* Image.swift */; };
 		BFAC2F1B2807172D000060FE /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAC2F1A2807172D000060FE /* FirebaseAuthManager.swift */; };
 		BFAC2F1D28072C48000060FE /* FilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAC2F1C28072C48000060FE /* FilterManager.swift */; };
+		BFAC2F1F28073EAE000060FE /* VideoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAC2F1E28073EAE000060FE /* VideoManager.swift */; };
 		BFBC7EFA2801C33500C88C29 /* EnterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7EF92801C33500C88C29 /* EnterViewController.swift */; };
 		BFBC7EFF2801F12300C88C29 /* NewAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */; };
 		BFBC7F012801FE6E00C88C29 /* FirebaseDataBaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFBC7F002801FE6E00C88C29 /* FirebaseDataBaseManager.swift */; };
@@ -58,6 +59,7 @@
 		BFAC2F18280715B7000060FE /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		BFAC2F1A2807172D000060FE /* FirebaseAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthManager.swift; sourceTree = "<group>"; };
 		BFAC2F1C28072C48000060FE /* FilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterManager.swift; sourceTree = "<group>"; };
+		BFAC2F1E28073EAE000060FE /* VideoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoManager.swift; sourceTree = "<group>"; };
 		BFBC7EF92801C33500C88C29 /* EnterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterViewController.swift; sourceTree = "<group>"; };
 		BFBC7EFE2801F12300C88C29 /* NewAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountViewController.swift; sourceTree = "<group>"; };
 		BFBC7F002801FE6E00C88C29 /* FirebaseDataBaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseDataBaseManager.swift; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				BF7AFDCA27F494BB00956BCA /* AppDelegate.swift */,
 				BF7B79FB2804BD4C0028B8FD /* Extensions.swift */,
 				BFAC2F1C28072C48000060FE /* FilterManager.swift */,
+				BFAC2F1E28073EAE000060FE /* VideoManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 			files = (
 				BF7AFDE527F49F9400956BCA /* CatalogViewController.swift in Sources */,
 				BF7AFDE927F4EA5C00956BCA /* ProductsModel.swift in Sources */,
+				BFAC2F1F28073EAE000060FE /* VideoManager.swift in Sources */,
 				BFF3185527FBC4F1008E292B /* FavoriteCollectionViewCell.swift in Sources */,
 				BF7AFDCF27F494BB00956BCA /* TabBarController.swift in Sources */,
 				BFBC7EFF2801F12300C88C29 /* NewAccountViewController.swift in Sources */,

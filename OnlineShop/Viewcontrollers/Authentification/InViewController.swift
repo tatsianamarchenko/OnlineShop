@@ -6,11 +6,9 @@
 //
 
 import UIKit
-import AVKit
 
 class InViewController: UIViewController {
-	private var player: AVPlayer?
-	private var playerLayer: AVPlayerLayer?
+	
 	private lazy var  createAccountButton = UIButton().createCustomButton(title: "create account")
 
 	private lazy var  enterButton = UIButton().createCustomButton(title: "log in")
@@ -27,27 +25,8 @@ class InViewController: UIViewController {
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		let bundle = Bundle.main.path(forResource: "videomain", ofType: "mp4")
-		guard let bundle = bundle else {
-			return
-		}
-		let url = URL(fileURLWithPath: bundle)
-
-		let item = AVPlayerItem(url: url)
-
-		player = AVPlayer(playerItem: item)
-		playerLayer = AVPlayerLayer(player: player)
-		playerLayer?.frame = CGRect(x: -30, y: 0, width: self.view.frame.size.width*1.3, height: self.view.frame.size.height)
-		guard let player = player else {
-			return
-		}
-
-		guard let playerLayer = playerLayer else {
-			return
-		}
-
-		view.layer.insertSublayer(playerLayer, at: 0)
-		player.playImmediately(atRate: 0.3)
+		let video = VideoManager(view: view)
+		video.addToView(name: "videomain", size: CGRect(x: -30, y: 0, width: (view?.frame.size.width)!*1.3, height: (view?.frame.size.height)!))
 	}
 
 	@objc private func tapped(_ button: UIButton) {
