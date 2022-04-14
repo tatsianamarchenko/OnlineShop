@@ -13,14 +13,19 @@ class FirebaseAuthManager {
 	static let shered = FirebaseAuthManager()
 	public let user = Auth.auth().currentUser
 	private let firebaseManager = FirebaseDataBaseManager()
-	public func insertUser(with user: AppUser,  completion: @escaping (Error) -> Void) {
+	public func insertUser(with user: AppUser,  completion: @escaping (Error?) -> Void) {
 		Auth.auth().createUser(withEmail: user.email, password: user.passward) { authResult, error in
 			if  error != nil {
 				completion(error!)
 			}
 			else {
 				self.firebaseManager.addUserToDatabase(with: user)
+				print("self.&&")
+				print(user)
+				print(self.user?.email)
+				print(Auth.auth().currentUser)
 				UserDefaults.standard.set(user.email, forKey: Constants.shered.userKey)
+				completion(nil)
 			}
 		}
 	}

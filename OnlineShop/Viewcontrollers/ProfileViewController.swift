@@ -465,8 +465,10 @@ class ProfileViewController: UIViewController {
 	private func config() {
 		guard let user = FirebaseAuthManager.shered.user else {return}
 
-		FirebaseDataBaseManager.shered.getUserFromDatabase(with: user.email ?? "", field: "users") { user in
+		FirebaseDataBaseManager.shered.getUserFromDatabase(with: user.email ?? "nihua", field: "users") { user in
+			print("user")
 			print(user)
+			print(user.email)
 			self.phoneLabel.text =  user.phone
 			self.mailLabel.text = user.email
 			self.namelLabel.text = user.fullNam
@@ -491,11 +493,13 @@ class ProfileViewController: UIViewController {
 
 	@objc private func reset() {
 		FirebaseAuthManager.shered.signOut {
-			print(UserDefaults.standard.object(forKey: Constants.shered.userKey))
+			if FirebaseAuthManager.shered.user == nil {
+			print("FirebaseAuthManager.shered.user?.email")
+			print(FirebaseAuthManager.shered.user?.email)
 			let vc = InViewController()
 			vc.modalPresentationStyle = .fullScreen
 			self.present(vc, animated: true)
-
+			}
 		}
 	}
 }

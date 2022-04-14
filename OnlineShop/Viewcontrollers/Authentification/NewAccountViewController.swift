@@ -133,11 +133,15 @@ class NewAccountViewController: UIViewController {
 		}
 		let user = FirebaseAuthManager.AppUser(fullName: fullName, phone: phone, adress: adress, zip: zip, email: email, passward: passward)
 		FirebaseAuthManager.shered.insertUser(with: user) { error in
-				self.alertUserLoginError(string: error.localizedDescription)
+			if error != nil {
+				self.alertUserLoginError(string: error?.localizedDescription ?? "")
+			}
+			else {
+						let vc = MainTabBarController()
+						vc.modalPresentationStyle = .fullScreen
+						self.present(vc, animated: true)
+			}
 		}
-		let vc = MainTabBarController()
-		vc.modalPresentationStyle = .fullScreen
-		self.present(vc, animated: true)
 	}
 
 	private func alertUserLoginError(string message: String) {

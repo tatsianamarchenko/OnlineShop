@@ -17,8 +17,6 @@ class FilterManager {
 		}
 	}
 
-
-
 	func loadInfo(sort: String?, complition: @escaping () -> Void) {
 		self.favorite()
 		CatalogViewController.flowers.removeAll()

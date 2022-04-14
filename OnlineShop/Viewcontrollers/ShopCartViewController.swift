@@ -100,7 +100,6 @@ class ShopCartViewController: UIViewController {
 	}
 
 	@objc private func deliteFromCart(_ sender: IndexedButton) {
-		print(sender.buttonIndexPath.row)
 		FirebaseDataBaseManager.shered.deliteFromDatabase(flower: flowers[sender.buttonIndexPath.row], field: .cart) { flower in
 			self.flowers.removeAll {
 				$0.id == flower.id
