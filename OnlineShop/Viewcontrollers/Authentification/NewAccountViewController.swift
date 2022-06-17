@@ -54,7 +54,7 @@ class NewAccountViewController: UIViewController {
 		adressTextField.delegate = self
 		phoneTextField.delegate = self
 		zipTextField.delegate = self
-
+		passwardTextField.isSecureTextEntry = true
 		makeConstraints()
 		signUpButton.addTarget(self, action: #selector(registrationFinishButtonTapped), for: .touchUpInside)
 		let gesture = UITapGestureRecognizer(target: self, action: #selector(profileImage))

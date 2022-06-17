@@ -7,7 +7,7 @@
 
 import UIKit
 import GMStepper
-import Alamofire
+//import Alamofire
 
 class CartCollectionViewCell: UICollectionViewCell {
 	

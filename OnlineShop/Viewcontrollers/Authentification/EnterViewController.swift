@@ -39,6 +39,7 @@ class EnterViewController: UIViewController {
 		view.addSubview(passwardTextField)
 		view.addSubview(emailTextField)
 		view.addSubview(logInButton)
+		passwardTextField.isSecureTextEntry = true
 		logInButton.addTarget(self, action: #selector(enterButtonTapped), for: .touchUpInside)
 		emailTextField.delegate = self
 		passwardTextField.delegate = self

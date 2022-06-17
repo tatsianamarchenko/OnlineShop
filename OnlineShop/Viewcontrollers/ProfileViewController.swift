@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ProfileViewController: UIViewController {
 
@@ -463,7 +464,7 @@ class ProfileViewController: UIViewController {
 	}
 
 	private func config() {
-		guard let user = FirebaseAuthManager.shered.user else {return}
+		guard let user = Auth.auth().currentUser else {return}
 
 		FirebaseDataBaseManager.shered.getUserFromDatabase(with: user.email ?? "nihua", field: "users") { user in
 			print("user")
@@ -493,9 +494,7 @@ class ProfileViewController: UIViewController {
 
 	@objc private func reset() {
 		FirebaseAuthManager.shered.signOut {
-			if FirebaseAuthManager.shered.user == nil {
-			print("FirebaseAuthManager.shered.user?.email")
-			print(FirebaseAuthManager.shered.user?.email)
+			if Auth.auth().currentUser == nil {
 			let vc = InViewController()
 			vc.modalPresentationStyle = .fullScreen
 			self.present(vc, animated: true)
